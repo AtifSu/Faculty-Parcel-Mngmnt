@@ -1,35 +1,38 @@
 <?php
 include('php/connect.php');
 session_start();
-
-$sql = "SELECT StdID, ParcelTrackingNum, ParcelCourier, ParcelStatus FROM Parcel";
+$ParcelID = null;
+$sql = "SELECT StdID, ParcelID,ParcelTrackingNum, ParcelCourier, ParcelStatus FROM Parcel";
 $result = mysqli_query($connect, $sql);
-
+//Search
 if (isset($_GET['search'])) {
   $search = $_GET['search'];
-  $sql = "SELECT StdID, ParcelTrackingNum, ParcelCourier, ParcelStatus FROM Parcel WHERE StdID LIKE '%$search%' OR ParcelTrackingNum LIKE '%$search%'";
+  $sql = "SELECT ParcelID, StdID, ParcelTrackingNum, ParcelCourier, ParcelStatus FROM Parcel WHERE StdID LIKE '%$search%' OR ParcelTrackingNum LIKE '%$search%'";
 } else {
-  $sql = "SELECT StdID, ParcelTrackingNum, ParcelCourier, ParcelStatus FROM Parcel";
+  $sql = "SELECT ParcelID, StdID, ParcelTrackingNum, ParcelCourier, ParcelStatus FROM Parcel";
 }
 $result = mysqli_query($connect, $sql);
+// Delete
+if (isset($_GET['StdID'])) {
+  $StdID = $_GET['StdID'];
 
-
-if (isset($_GET['id'])) {
-  $id = $_GET['id'];
-
-  $sql = "DELETE FROM Parcel WHERE ParcelID = ?";
+  $sql = "DELETE FROM Parcel WHERE StdID = ?";
   $stmt = mysqli_prepare($connect, $sql);
-  mysqli_stmt_bind_param($stmt, "s", $id);
+  mysqli_stmt_bind_param($stmt, "i", $StdID);
   mysqli_stmt_execute($stmt);
 
   if (mysqli_stmt_affected_rows($stmt) > 0) {
     echo json_encode(array("success" => true));
   } else {
+    // Log the error message
+    error_log("Error deleting parcel: " . mysqli_error($connect));
     echo json_encode(array("success" => false));
   }
 
   mysqli_stmt_close($stmt);
   mysqli_close($connect);
+
+  exit;
 }
 ?>
 
@@ -129,14 +132,16 @@ if (isset($_GET['id'])) {
         echo "<p> <strong>Parcel Courier:</strong> $ParcelCourier</p>";
         echo "<p> <strong>Status:</strong> $ParcelStatus</p>";
         echo "</h6>";
+        echo '<div class="h2 mb-0">';
+        echo '</div>';
         echo '</div>';
         echo '</div>';
         echo '</div>';
 
         echo '<div class="col">';
-        echo '<a class="icon-link remove-link" href="#" onclick="removeParcel(\'' . $ParcelTrackingNum . '\')">Remove</a>';
+        echo "<a type='button' class='bi bi-pencil-square'></a>";
+        echo '<a class="ms-4 icon-link remove-link" href="#" onclick="removeParcel(\'' . $ParcelTrackingNum . '\')">Remove</a>';
         echo '</div>';
-
         echo '</div>';
       }
     }
@@ -223,12 +228,11 @@ if (isset($_GET['id'])) {
                   </div>
                 </div>
               </div>
-              <div class="modal-footer">
+              <div class="modal-footer mt-5">
                 <button type="submit" class="btn btn-primary">Save changes</button>
               </div>
             </form>
           </div>
-
           <script>
             var toastTrigger = document.getElementById('liveToastBtn');
             var toasts = document.querySelectorAll('.toast');
@@ -263,10 +267,10 @@ if (isset($_GET['id'])) {
                 });
               });
             });
-            //Remove Function (Delete Parcel)
-            function removeParcel(ParcelID) {
-              fetch(window.location.href + "?id=" + ParcelID, {
-                  method: 'DELETE'
+            // Remove Function (Delete Parcel)
+            function removeParcel(ParcelTrackingNum) {
+              fetch('delete_parcel.php?ParcelTrackingNum=' + ParcelTrackingNum, {
+                  method: 'GET'
                 })
                 .then(response => {
                   if (!response.ok) {
@@ -283,7 +287,7 @@ if (isset($_GET['id'])) {
                 })
                 .catch(error => {
                   console.error("Error:", error);
-                  alert("Parcel removed sucesffully. Please refresh.");
+                  alert("Error.");
                 });
               event.preventDefault();
             }
