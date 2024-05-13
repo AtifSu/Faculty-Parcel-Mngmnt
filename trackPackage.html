@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <script src="js/bootstrap.bundle.js"></script>
+    <title>Track package</title>
+  </head>
+  <body>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg bg-body-secondary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="trackPackage.html">
+          <img src="img/logo.png" alt="logo" width="95" height="60" />
+          Faculty Parcel Management
+        </a>
+        <ul class="nav justify-content-end">
+          <li class="nav-item">
+            <div class="h1">
+              <a
+                class="nav-link bi bi-credit-card active"
+                aria-current="page"
+                href="StdPayment.php"
+              ></a>
+            </div>
+          </li>
+          <!-- Toast Notification -->
+          <li class="nav-item">
+            <div class="h1">
+              <button
+                type="button"
+                class="nav-link bi bi-bell"
+                id="liveToastBtn"
+              ></button>
+            </div>
+          </li>
+          <li class="nav-item">
+            <div class="h1">
+              <a class="nav-link bi bi-person" href="StdProfile.php"></a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <form id="trackingForm" target="_blank" action="#">
+      <div class="form-group mx-auto">
+        <div class="row no-gutters">
+          <div class="col-md-8 col-lg-6 mx-auto mt-5">
+            <h1 class="mx-auto text-center">Track your delivery</h1>
+            <div class="input-group mb-3">
+              <input
+                class="form-control"
+                type="text"
+                id="trackingNumber"
+                placeholder="Enter your tracking number"
+                name="ParcelTrackingNum"
+                aria-label=".form-control-lg example"
+              />
+              <button
+                type="submit"
+                class="btn btn-primary bi bi-arrow-right-circle-fill"
+              ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <img
+            src="img/logo.png"
+            class="rounded me-2"
+            width="30"
+            height="20"
+            alt=""
+          />
+          <strong class="me-auto">Faculty Parcel Management</strong>
+          <!-- <small class="text-body-secondary">just now</small> -->
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body">Parcels Have Arrived</div>
+      </div>
+
+      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <img
+            src="img/logo.png"
+            class="rounded me-2"
+            width="30"
+            height="20"
+            alt=""
+          />
+          <strong class="me-auto">Faculty Parcel Management</strong>
+          <!-- <small class="text-body-secondary">2 seconds ago</small> -->
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body">Appointment booked</div>
+      </div>
+    </div>
+
+    <div>
+      <div
+        id="trackingInfo1"
+        class="alert alert-light w-75 mx-auto"
+        role="alert"
+      >
+        <!-- Tracking information will be displayed here -->
+      </div>
+      <div
+        id="trackingInfo2"
+        class="alert alert-light w-75 mx-auto"
+        role="alert"
+      >
+        <!-- Additional tracking information (if any) will be displayed here -->
+      </div>
+      <div
+        id="trackingInfo3"
+        class="alert alert-light w-75 mx-auto"
+        role="alert"
+      >
+        <!-- Additional tracking information (if any) will be displayed here -->
+      </div>
+    </div>
+
+    <script>
+      var toastTrigger = document.getElementById("liveToastBtn");
+      var toasts = document.querySelectorAll(".toast");
+
+      if (toastTrigger) {
+        toastTrigger.addEventListener("click", function () {
+          toasts.forEach(function (toast, index) {
+            var delay = index * 1000; // 1000 milliseconds = 1 seconds
+
+            setTimeout(function () {
+              var bsToast = new bootstrap.Toast(toast);
+              bsToast.show();
+            }, delay);
+          });
+        });
+      }
+      //Parcel Tracking function
+      document
+        .getElementById("trackingForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Prevent default form submission
+
+          var trackingNumber = document.getElementById("trackingNumber").value;
+
+          fetch("http://localhost:3000/track", {
+            method: "POST",
+            body: JSON.stringify({ trackingNumber: trackingNumber }),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer VvKDGOtcOzziJnCI42AfJPZv2EL1HKwQ",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              // Display tracking information in the alert divs
+              document.getElementById("trackingInfo1").innerHTML =
+                data.message1;
+              document.getElementById("trackingInfo2").innerHTML =
+                data.message2;
+              document.getElementById("trackingInfo3").innerHTML =
+                data.message3;
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              // Display error message in the alert divs
+              document.getElementById("trackingInfo1").innerHTML =
+                "Failed to retrieve tracking information. Please try again later.";
+              document.getElementById("trackingInfo2").innerHTML = "";
+              document.getElementById("trackingInfo3").innerHTML = "";
+            });
+        });
+    </script>
+  </body>
+</html>
