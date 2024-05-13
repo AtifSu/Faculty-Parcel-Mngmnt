@@ -5,18 +5,20 @@ session_start();
 if (isset($_SESSION['AdminID'])) {
   $AdminID = $_SESSION['AdminID'];
 
-  $sql = "SELECT AdminName, AdminID, AdminEmail FROM FSPAdmin WHERE AdminID = ?";
-  $stmt = mysqli_prepare($connect, $sql);
-  mysqli_stmt_bind_param($stmt, "i", $AdminID);
-  mysqli_stmt_execute($stmt);
-  $result = mysqli_stmt_get_result($stmt);
+  $sql = "SELECT AdminName, AdminID, AdminEmail FROM FSPAdmin";
+  $result = mysqli_query($connect, $sql);
 
-  if ($result && $row = mysqli_fetch_assoc($result)) {
-    $AdminName = $row['AdminName'];
-    $AdminID = $row['AdminID'];
-    $AdminEmail = $row['AdminEmail'];
+  if ($result && mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+      if ($row['AdminID'] == $AdminID) {
+        $AdminName = $row['AdminName'];
+        $AdminID = $row['AdminID'];
+        $AdminEmail = $row['AdminEmail'];
+        break; 
+      }
+    }
   } else {
-    echo "Error: User profile not found";
+    echo "Error: No results found";
   }
 } else {
   header("Location: login.html");

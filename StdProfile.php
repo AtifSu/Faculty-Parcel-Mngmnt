@@ -5,18 +5,20 @@ session_start();
 if (isset($_SESSION['StdID'])) {
   $StdID = $_SESSION['StdID'];
 
-  $sql = "SELECT StdName, StdID, StdEmail FROM Student WHERE StdID = ?";
-  $stmt = mysqli_prepare($connect, $sql);
-  mysqli_stmt_bind_param($stmt, "i", $StdID);
-  mysqli_stmt_execute($stmt);
-  $result = mysqli_stmt_get_result($stmt);
+  $sql = "SELECT StdName, StdID, StdEmail FROM Student";
+  $result = mysqli_query($connect, $sql);
 
-  if ($result && $row = mysqli_fetch_assoc($result)) {
-    $StdName = $row['StdName'];
-    $StdID = $row['StdID'];
-    $StdEmail = $row['StdEmail'];
+  if ($result && mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+      if ($row['StdID'] == $StdID) {
+        $StdName = $row['StdName'];
+        $StdID = $row['StdID'];
+        $StdEmail = $row['StdEmail'];
+        break; 
+      }
+    }
   } else {
-    echo "Error: User profile not found";
+    echo "Error: No results found";
   }
 } else {
   header("Location: login.html");
