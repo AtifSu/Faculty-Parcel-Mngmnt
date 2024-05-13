@@ -2,15 +2,14 @@
 include('php/connect.php');
 session_start();
 
-
-$sql = "SELECT StdID, ParcelTrackingNum, AppointmentDate FROM Appointment";
+$sql = "SELECT StdID, ParcelTrackingNum, ParcelCourier, ParcelStatus FROM Parcel";
 $result = mysqli_query($connect, $sql);
 
 if (isset($_GET['search'])) {
   $search = $_GET['search'];
-  $sql = "SELECT StdID, ParcelTrackingNum, AppointmentDate FROM Appointment WHERE StdID LIKE '%$search%' OR ParcelTrackingNum LIKE '%$search%'";
+  $sql = "SELECT StdID, ParcelTrackingNum, ParcelCourier, ParcelStatus FROM Parcel WHERE StdID LIKE '%$search%' OR ParcelTrackingNum LIKE '%$search%'";
 } else {
-  $sql = "SELECT StdID, ParcelTrackingNum, AppointmentDate FROM Appointment";
+  $sql = "SELECT StdID, ParcelTrackingNum, ParcelCourier, ParcelStatus FROM Parcel";
 }
 $result = mysqli_query($connect, $sql);
 
@@ -18,7 +17,7 @@ $result = mysqli_query($connect, $sql);
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
 
-  $sql = "DELETE FROM Appointment WHERE ParcelTrackingNum = ?";
+  $sql = "DELETE FROM Parcel WHERE ParcelID = ?";
   $stmt = mysqli_prepare($connect, $sql);
   mysqli_stmt_bind_param($stmt, "s", $id);
   mysqli_stmt_execute($stmt);
@@ -90,6 +89,9 @@ if (isset($_GET['id'])) {
       </div>
       <div class="col">
         <div class="row justify-content-center">
+          <div class="h2 col-auto">
+            <a type="button" class="bi bi-plus-square" data-bs-toggle="modal" data-bs-target="#exampleModal"></a>
+          </div>
           <div class="col-sm-6">
             <form action="ManageParcels.php" method="get" id="searchForm">
               <div class="row justify-content-between">
@@ -109,12 +111,13 @@ if (isset($_GET['id'])) {
     </div>
     <br>
     <?php
-    
+
     if ($result) {
       while ($row = mysqli_fetch_assoc($result)) {
         $StdID = $row['StdID'];
-        $TrackingNum = $row['ParcelTrackingNum'];
-        $AppDate = $row['AppointmentDate'];
+        $ParcelTrackingNum = $row['ParcelTrackingNum'];
+        $ParcelCourier = $row['ParcelCourier'];
+        $ParcelStatus = $row['ParcelStatus'];
 
         echo '<div class="row">';
         echo '<div class="col">';
@@ -122,15 +125,16 @@ if (isset($_GET['id'])) {
         echo '<div class="card-body">';
         echo "<h6>";
         echo "<p> <strong> Matrics ID:</strong> $StdID</p>";
-        echo "<p> <strong>Tracking No:</strong> $TrackingNum</p>";
-        echo "<p> <strong> Appointment Date:</strong>  $AppDate</p>";
+        echo "<p> <strong>Tracking No:</strong> $ParcelTrackingNum</p>";
+        echo "<p> <strong>Parcel Courier:</strong> $ParcelCourier</p>";
+        echo "<p> <strong>Status:</strong> $ParcelStatus</p>";
         echo "</h6>";
         echo '</div>';
         echo '</div>';
         echo '</div>';
 
         echo '<div class="col">';
-        echo '<a class="icon-link remove-link" href="#" onclick="removeParcel(\'' . $TrackingNum . '\')">Remove</a>';
+        echo '<a class="icon-link remove-link" href="#" onclick="removeParcel(\'' . $ParcelTrackingNum . '\')">Remove</a>';
         echo '</div>';
 
         echo '</div>';
@@ -164,64 +168,126 @@ if (isset($_GET['id'])) {
       </div>
     </div>
 
-    <script>
-      var toastTrigger = document.getElementById('liveToastBtn');
-      var toasts = document.querySelectorAll('.toast');
+    <!-- Add appointment popup -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Parcel</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Form -->
+            <form action="addparcel.php" method="post">
+              <div class="row g-3 align-items-center">
+                <div class="col">
+                  <div class="row">
+                    <div class="col-auto">
+                      <label for="ParcelTrackingNum" class="col-form-label">Tracking Number</label>
+                    </div>
+                    <div class="col-auto">
+                      <input type="text" id="ParcelTrackingNum" name="ParcelTrackingNum" class="form-control">
+                    </div>
+                  </div>
+                  <div class="row mt-1">
+                    <div class="col-auto">
+                      <label for="ParcelCourier" class="col-form-label">Courier</label>
+                    </div>
+                    <div class="col-auto ms-5">
+                      <input type="text" id="ParcelCourier" name="ParcelCourier" class="form-control">
+                    </div>
+                  </div>
+                  <div class="row mt-1">
+                    <div class="col-auto">
+                      <label for="ParcelStatus" class="col-form-label">Status</label>
+                    </div>
+                    <div class="col-auto ms-5">
+                      <input type="text" id="ParcelStatus" name="ParcelStatus" class="form-control">
+                    </div>
+                  </div>
+                  <div class="row mt-1">
+                    <div class="col-auto">
+                      <label for="ParcelArriveDate" class="col-form-label">Arrived Date</label>
+                    </div>
+                    <div class="col-auto ms-1">
+                      <input type="date" id="ParcelArriveDate" name="ParcelArriveDate" class="form-control">
+                    </div>
+                  </div>
+                  <div class="row mt-1">
+                    <div class="col-auto">
+                      <label for="StdID" class="col-form-label">Matrics ID</label>
+                    </div>
+                    <div class="col-auto ms-3">
+                      <input type="text" id="StdID" name="StdID" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save changes</button>
+              </div>
+            </form>
+          </div>
 
-      if (toastTrigger) {
-        toastTrigger.addEventListener('click', function() {
+          <script>
+            var toastTrigger = document.getElementById('liveToastBtn');
+            var toasts = document.querySelectorAll('.toast');
 
-          toasts.forEach(function(toast, index) {
-            var delay = index * 1000; // 1000 milliseconds = 1 seconds
+            if (toastTrigger) {
+              toastTrigger.addEventListener('click', function() {
 
-            setTimeout(function() {
-              var bsToast = new bootstrap.Toast(toast);
-              bsToast.show();
-            }, delay);
-          });
-        });
-      }
-      //Searching function
-      document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById("searchBtn").addEventListener("click", function() {
-          const searchValue = document.getElementById("searchInput").value.toLowerCase();
-          const parcelCards = document.getElementById("parcelCards");
-          const cards = parcelCards.querySelectorAll(".card");
+                toasts.forEach(function(toast, index) {
+                  var delay = index * 1000; // 1000 milliseconds = 1 seconds
 
-          cards.forEach(card => {
-            const text = card.innerText.toLowerCase();
-            if (text.includes(searchValue)) {
-              card.style.display = "block";
-            } else {
-              card.style.display = "none";
+                  setTimeout(function() {
+                    var bsToast = new bootstrap.Toast(toast);
+                    bsToast.show();
+                  }, delay);
+                });
+              });
             }
-          });
-        });
-      });
-      //Remove Function (Delete Parcel)
-      function removeParcel(AppointmentID) {
-        fetch(window.location.href + "?id=" + AppointmentID, {
-            method: 'DELETE'
-          })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
+            //Searching function
+            document.addEventListener("DOMContentLoaded", function() {
+              document.getElementById("searchBtn").addEventListener("click", function() {
+                const searchValue = document.getElementById("searchInput").value.toLowerCase();
+                const parcelCards = document.getElementById("parcelCards");
+                const cards = parcelCards.querySelectorAll(".card");
+
+                cards.forEach(card => {
+                  const text = card.innerText.toLowerCase();
+                  if (text.includes(searchValue)) {
+                    card.style.display = "block";
+                  } else {
+                    card.style.display = "none";
+                  }
+                });
+              });
+            });
+            //Remove Function (Delete Parcel)
+            function removeParcel(ParcelID) {
+              fetch(window.location.href + "?id=" + ParcelID, {
+                  method: 'DELETE'
+                })
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                  }
+                  return response.json();
+                })
+                .then(data => {
+                  if (data.success) {
+                    location.reload();
+                  } else {
+                    alert("Failed to remove parcel. The server responded with an error.");
+                  }
+                })
+                .catch(error => {
+                  console.error("Error:", error);
+                  alert("Parcel removed sucesffully. Please refresh.");
+                });
+              event.preventDefault();
             }
-            return response.json();
-          })
-          .then(data => {
-            if (data.success) {
-              location.reload();
-            } else {
-              alert("Failed to remove parcel. The server responded with an error.");
-            }
-          })
-          .catch(error => {
-            console.error("Error:", error);
-            alert("Parcel removed sucesffully. Please refresh.");
-          });
-        event.preventDefault();
-      }
-    </script>
+          </script>
 </body>
+
 </html>
