@@ -21,7 +21,7 @@ session_start();
   <!-- Navigation bar -->
   <nav class="navbar navbar-expand-lg bg-body-secondary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="trackPackage.html">
+      <a class="navbar-brand" href="trackPackage.php">
         <img src="img/logo.png" alt="logo" width="95" height="60">
         Faculty Parcel Management
       </a>

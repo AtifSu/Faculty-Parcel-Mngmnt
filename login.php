@@ -40,7 +40,7 @@ if (isset($_POST['email'], $_POST['password'])) {
 
     session_regenerate_id(true);
 
-    header("Location: trackPackage.html");
+    header("Location: trackPackage.php");
     echo "<script>alert('Logged in as student with email: " . $student['StdEmail'] . "');</script>";
 
     exit();
