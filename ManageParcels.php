@@ -113,40 +113,41 @@ if (isset($_GET['StdID'])) {
       </div>
     </div>
     <br>
-    <?php
+    <div id="parcelCards">
+      <?php
+      if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+          $ParcelID = $row['ParcelID'];
+          $StdID = $row['StdID'];
+          $ParcelTrackingNum = $row['ParcelTrackingNum'];
+          $ParcelCourier = $row['ParcelCourier'];
+          $ParcelStatus = $row['ParcelStatus'];
 
-    if ($result) {
-      while ($row = mysqli_fetch_assoc($result)) {
-        $StdID = $row['StdID'];
-        $ParcelTrackingNum = $row['ParcelTrackingNum'];
-        $ParcelCourier = $row['ParcelCourier'];
-        $ParcelStatus = $row['ParcelStatus'];
+          echo '<div class="row mb-3">';
+          echo '<div class="col">';
+          echo '<div class="card">';
+          echo '<div class="card-body">';
+          echo "<h6>";
+          echo "<p> <strong> Matrics ID:</strong> $StdID</p>";
+          echo "<p> <strong>Tracking No:</strong> $ParcelTrackingNum</p>";
+          echo "<p> <strong>Parcel Courier:</strong> $ParcelCourier</p>";
+          echo "<p> <strong>Status:</strong> $ParcelStatus</p>";
+          echo "</h6>";
+          echo '<div class="h2 mb-0">';
+          echo '</div>';
+          echo '</div>';
+          echo '</div>';
+          echo '</div>';
 
-        echo '<div class="row">';
-        echo '<div class="col">';
-        echo '<div class="card">';
-        echo '<div class="card-body">';
-        echo "<h6>";
-        echo "<p> <strong> Matrics ID:</strong> $StdID</p>";
-        echo "<p> <strong>Tracking No:</strong> $ParcelTrackingNum</p>";
-        echo "<p> <strong>Parcel Courier:</strong> $ParcelCourier</p>";
-        echo "<p> <strong>Status:</strong> $ParcelStatus</p>";
-        echo "</h6>";
-        echo '<div class="h2 mb-0">';
-        echo '</div>';
-        echo '</div>';
-        echo '</div>';
-        echo '</div>';
-
-        echo '<div class="col">';
-        echo "<a type='button' class='bi bi-pencil-square'></a>";
-        echo '<a class="ms-4 icon-link remove-link" href="#" onclick="removeParcel(\'' . $ParcelTrackingNum . '\')">Remove</a>';
-        echo '</div>';
-        echo '</div>';
+          echo '<div class="col">';
+          echo "<a type='button' class='bi bi-pencil-square' data-bs-toggle='modal' data-bs-target='#editModal' data-parcel-id='$ParcelID' data-parcel-status='$ParcelStatus'></a>";
+          echo '<a class="ms-4 icon-link remove-link" href="#" onclick="removeParcel(\'' . $ParcelID . '\')">Remove</a>';
+          echo '</div>';
+          echo '</div>';
+        }
       }
-    }
-    ?>
-
+      ?>
+    </div>
     <div class="toast-container position-fixed top-0 end-0 p-3">
       <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
@@ -173,7 +174,7 @@ if (isset($_GET['StdID'])) {
       </div>
     </div>
 
-    <!-- Add appointment popup -->
+    <!-- Add parcel modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -233,65 +234,143 @@ if (isset($_GET['StdID'])) {
               </div>
             </form>
           </div>
-          <script>
-            var toastTrigger = document.getElementById('liveToastBtn');
-            var toasts = document.querySelectorAll('.toast');
+        </div>
+      </div>
+    </div>
 
-            if (toastTrigger) {
-              toastTrigger.addEventListener('click', function() {
+    <!-- Edit parcel modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="editModalLabel">Edit Parcel</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Edit Form -->
+            <form id="editParcelForm">
+              <input type="hidden" id="editParcelID" name="ParcelID">
+              <div class="row g-3 align-items-center">
+                <div class="col">
+                  <div class="row">
+                    <div class="col-auto">
+                      <label for="editParcelStatus" class="col-form-label">Status</label>
+                    </div>
+                    <div class="col-auto ms-5">
+                      <input type="text" id="editParcelStatus" name="ParcelStatus" class="form-control">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer mt-5">
+                <button type="button" class="btn btn-primary" onclick="updateParcel()">Save changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-                toasts.forEach(function(toast, index) {
-                  var delay = index * 1000; // 1000 milliseconds = 1 seconds
+    <script>
+      // Handle edit button click
+      var editModal = document.getElementById('editModal');
+      editModal.addEventListener('show.bs.modal', function(event) {
+        var button = event.relatedTarget;
+        var parcelID = button.getAttribute('data-parcel-id');
+        var parcelStatus = button.getAttribute('data-parcel-status');
 
-                  setTimeout(function() {
-                    var bsToast = new bootstrap.Toast(toast);
-                    bsToast.show();
-                  }, delay);
-                });
-              });
+        var modalParcelID = editModal.querySelector('#editParcelID');
+        var modalParcelStatus = editModal.querySelector('#editParcelStatus');
+
+        modalParcelID.value = parcelID;
+        modalParcelStatus.value = parcelStatus;
+      });
+
+      // Update parcel status
+      function updateParcel() {
+        var form = document.getElementById('editParcelForm');
+        var formData = new FormData(form);
+
+        fetch('edit_parcel.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert("Successfully updated the parcel.");
+            location.reload();
+          } else {
+            alert("Failed to update parcel. The server responded with an error.");
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("Error updating parcel.");
+        });
+      }
+
+      // Remove parcel
+      function removeParcel(ParcelID) {
+        fetch('delete_parcel.php?ParcelID=' + ParcelID, {
+          method: 'GET'
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.success) {
+            alert("Successfully removed the parcel.");
+            location.reload();
+          } else {
+            alert("Failed to remove parcel. The server responded with an error.");
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("Error removing parcel.");
+        });
+        event.preventDefault();
+      }
+
+      // Searching function
+      document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("searchBtn").addEventListener("click", function() {
+          const searchValue = document.getElementById("searchInput").value.toLowerCase();
+          const parcelCards = document.getElementById("parcelCards");
+          const cards = parcelCards.querySelectorAll(".card");
+
+          cards.forEach(card => {
+            const text = card.innerText.toLowerCase();
+            if (text.includes(searchValue)) {
+              card.style.display = "block";
+            } else {
+              card.style.display = "none";
             }
-            //Searching function
-            document.addEventListener("DOMContentLoaded", function() {
-              document.getElementById("searchBtn").addEventListener("click", function() {
-                const searchValue = document.getElementById("searchInput").value.toLowerCase();
-                const parcelCards = document.getElementById("parcelCards");
-                const cards = parcelCards.querySelectorAll(".card");
+          });
+        });
+      });
 
-                cards.forEach(card => {
-                  const text = card.innerText.toLowerCase();
-                  if (text.includes(searchValue)) {
-                    card.style.display = "block";
-                  } else {
-                    card.style.display = "none";
-                  }
-                });
-              });
-            });
-            // Remove Function (Delete Parcel)
-            function removeParcel(ParcelTrackingNum) {
-              fetch('delete_parcel.php?ParcelTrackingNum=' + ParcelTrackingNum, {
-                  method: 'GET'
-                })
-                .then(response => {
-                  if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                  }
-                  return response.json();
-                })
-                .then(data => {
-                  if (data.success) {
-                    location.reload();
-                  } else {
-                    alert("Failed to remove parcel. The server responded with an error.");
-                  }
-                })
-                .catch(error => {
-                  console.error("Error:", error);
-                  alert("Error.");
-                });
-              event.preventDefault();
-            }
-          </script>
+      // Toast notification
+      var toastTrigger = document.getElementById('liveToastBtn');
+      var toasts = document.querySelectorAll('.toast');
+
+      if (toastTrigger) {
+        toastTrigger.addEventListener('click', function() {
+          toasts.forEach(function(toast, index) {
+            var delay = index * 1000; // 1000 milliseconds = 1 second
+
+            setTimeout(function() {
+              var bsToast = new bootstrap.Toast(toast);
+              bsToast.show();
+            }, delay);
+          });
+        });
+      }
+    </script>
 </body>
 
 </html>
