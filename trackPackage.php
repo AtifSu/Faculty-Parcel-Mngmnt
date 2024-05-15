@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="css/bootstrap.css" />
+  <link rel="stylesheet" href="custom.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <script src="js/bootstrap.bundle.js"></script>
   <title>Track package</title>
@@ -74,21 +75,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="form-group mx-auto">
       <div class="row no-gutters">
         <div class="col-md-8 col-lg-6 mx-auto mt-5">
-          <h1 class="mx-auto text-center">Track your delivery</h1>
+          <h1 class="sec-color mx-auto text-center">Track your delivery</h1>
           <div class="input-group mb-3">
             <input class="form-control" type="text" id="trackingNumber" placeholder="Enter your tracking number" name="ParcelTrackingNum" aria-label=".form-control-lg example" />
-            <button type="submit" class="btn btn-primary bi bi-arrow-right-circle-fill"></button>
+            <button type="submit" class="first-color btn btn-primary bi bi-arrow-right-circle-fill"></button>
           </div>
         </div>
       </div>
     </div>
   </form>
 
-  <div id="trackingInfo1" class="alert alert-light w-75 mx-auto" role="alert">
+  <div id="trackingInfo1" class="sec-color alert alert-light w-75 mx-auto" role="alert">
     <strong>Parcel Status:</strong> <?php echo $parcelStatus; ?>
   </div>
 
-  <div id="trackingInfo2" class="alert alert-light w-75 mx-auto" role="alert">
+  <div id="trackingInfo2" class="sec-color alert alert-light w-75 mx-auto" role="alert">
     <strong>Parcel Arrival Date:</strong> <?php echo $parcelArriveDate; ?>
   </div>
 

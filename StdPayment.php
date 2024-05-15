@@ -11,6 +11,7 @@ session_start();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="custom.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <script src="js/bootstrap.bundle.js"></script>
 
@@ -54,8 +55,8 @@ session_start();
       <div class="card" style="width: 18rem;">
         <img src="img/bank.png" class="card-img-top" alt="...">
         <div class="card-body">
-          <p class="card-text">Account Number.</p>
-          <p class="card-text">Bank Name.</p>
+          <p class="card-text"><strong>Account Number.</strong></p>
+          <p class="card-text"><strong>Bank Name.</strong></p>
         </div>
       </div>
     </div>
@@ -92,7 +93,7 @@ session_start();
               <input type="text" class="form-control" id="ParcelTrackingNum" name="ParcelTrackingNum" required>
               <div class="h1 float-end">
                 <button type="submit" class="btn btn-primary">
-                  <span class="bi bi-arrow-right-circle-fill"></span>
+                  <span class="first-color bi bi-arrow-right-circle"></span>
                 </button>
               </div>
             </div>

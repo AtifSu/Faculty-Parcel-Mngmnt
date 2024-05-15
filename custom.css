@@ -54,11 +54,7 @@
     color: var(--primary);
   }
   
-  .btn-secondary:hover,
-  .btn-secondary:focus,
-  .btn-secondary:active,
-  .btn-secondary.active,
-  .show > .btn-secondary.dropdown-toggle {
+  .btn-secondary:hover{
     background-color: var(--primary);
     border-color: var(--primary);
     color: var(--secondary);
@@ -118,3 +114,16 @@
 .sec-color{
    color: var(--primary);
 }
+.first-color{
+ color: var(--secondary);
+}
+.btn-outline-primary{
+    background-color: var(--secondary);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+.btn-outline-primary:hover {
+    background-color: var(--primary);
+    color: var(--secondary);
+    border-color: var(--secondary);
+  }
