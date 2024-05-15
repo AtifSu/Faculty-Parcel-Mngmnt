@@ -1,0 +1,120 @@
+:root {
+    --primary: #F46E75;
+    --secondary: #FAE8EB;
+  }
+  
+  /* Primary button */
+  .btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--secondary);
+  }
+  
+  .btn-primary:hover,
+  .btn-primary:focus,
+  .btn-primary:active,
+  .btn-primary.active,
+  .show > .btn-primary.dropdown-toggle {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+    color: var(--primary);
+  }
+  
+  .btn-primary:focus,
+  .btn-primary:active,
+  .btn-primary.active {
+    box-shadow: none; /* Remove Bootstrap's default box-shadow */
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+    color: var(--primary);
+  }
+  
+  /* Primary background and text color */
+  .bg-primary {
+    background-color: var(--primary) !important;
+  }
+  
+  .text-primary {
+    color: var(--primary) !important;
+  }
+  
+  /* Secondary background and text color */
+  .bg-secondary {
+    background-color: var(--secondary) !important;
+  }
+  
+  .text-secondary {
+    color: var(--secondary) !important;
+  }
+  
+  /* Secondary button */
+  .btn-secondary {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+    color: var(--primary);
+  }
+  
+  .btn-secondary:hover,
+  .btn-secondary:focus,
+  .btn-secondary:active,
+  .btn-secondary.active,
+  .show > .btn-secondary.dropdown-toggle {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--secondary);
+  }
+  
+  .btn-secondary:focus,
+  .btn-secondary:active,
+  .btn-secondary.active {
+    box-shadow: none; /* Remove Bootstrap's default box-shadow */
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--secondary);
+  }
+  
+  /* Other custom styles */
+  .bg-body-secondary {
+    background-color: var(--secondary) !important;
+  }
+  
+  .card-body {
+    background-color: var(--secondary) !important;
+    border-color: white;
+    color: var(--primary);
+  }
+  
+  .primary {
+    color: var(--primary);
+  }
+  
+  .icon-link {
+    color: var(--primary);
+    text-decoration-color: var(--primary);
+  }
+  
+  .navbar {
+    border-color: var(--secondary);
+    color: var(--primary);
+  }
+  
+  .bi{
+    color: var(--primary);
+  }
+  #li{
+    color: var(--primary);
+  }
+  .list-group-item {
+    color: var(--primary);
+    background-color: var(--secondary);
+    text-decoration-color: var(--primary);
+  }
+.no-decoration{
+    text-decoration:none;
+}
+.h2{
+    color: var(--primary);
+}
+.sec-color{
+   color: var(--primary);
+}

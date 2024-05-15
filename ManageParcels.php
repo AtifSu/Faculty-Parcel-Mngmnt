@@ -45,6 +45,7 @@ if (isset($_GET['StdID'])) {
   <title>Manage Parcels</title>
   <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="custom.css">
   <script src="js/bootstrap.bundle.js"></script>
 </head>
 
@@ -60,25 +61,25 @@ if (isset($_GET['StdID'])) {
         <!-- Manage Payment -->
         <li class="nav-item">
           <div class="h1">
-            <a class="nav-link bi bi-credit-card active" aria-current="page" href="AdminPayment.php"></a>
+            <a class="nav-link bi bi-credit-card active" aria-current="page" href="AdminPayment.php" style="color: #F46E75"></a>
           </div>
         </li>
         <!-- Parcels -->
         <li class="nav-item">
           <div class="h1">
-            <a class="nav-link bi bi-archive active" aria-current="page" href="ManageParcels.php"></a>
+            <a class="nav-link bi bi-archive active" style="color: #F46E75" aria-current="page" href="ManageParcels.php"></a>
           </div>
         </li>
         <!-- Toast Notification -->
         <li class="nav-item">
           <div class="h1">
-            <button type="button" class="nav-link bi bi-bell" id="liveToastBtn"></button>
+            <button type="button" style="color: #F46E75" class="nav-link bi bi-bell" id="liveToastBtn"></button>
           </div>
         </li>
         <!-- Profile -->
         <li class="nav-item">
           <div class="h1">
-            <a class="nav-link bi bi-person" href="AdminProfile.php"></a>
+            <a class="nav-link bi bi-person" style="color: #F46E75" href="AdminProfile.php"></a>
           </div>
         </li>
       </ul>
@@ -93,7 +94,7 @@ if (isset($_GET['StdID'])) {
       <div class="col">
         <div class="row justify-content-center">
           <div class="h2 col-auto">
-            <a type="button" class="bi bi-plus-square" data-bs-toggle="modal" data-bs-target="#exampleModal"></a>
+            <a type="button" class="bi bi-plus-square" style="color: #F46E75"data-bs-toggle="modal" data-bs-target="#exampleModal"></a>
           </div>
           <div class="col-sm-6">
             <form action="ManageParcels.php" method="get" id="searchForm">
@@ -140,8 +141,8 @@ if (isset($_GET['StdID'])) {
           echo '</div>';
 
           echo '<div class="col">';
-          echo "<a type='button' class='bi bi-pencil-square' data-bs-toggle='modal' data-bs-target='#editModal' data-parcel-id='$ParcelID' data-parcel-status='$ParcelStatus'></a>";
-          echo '<a class="ms-4 icon-link remove-link" href="#" onclick="removeParcel(\'' . $ParcelID . '\')">Remove</a>';
+          echo "<a type='button' style='color: #F46E75' class='bi bi-pencil-square' data-bs-toggle='modal' data-bs-target='#editModal' data-parcel-id='$ParcelID' data-parcel-status='$ParcelStatus'></a>";
+          echo '<a class="ms-4 icon-link remove-link" href="#"  onclick="removeParcel(\'' . $ParcelID . '\')" style="color: #F46E75" >Remove</a>';
           echo '</div>';
           echo '</div>';
         }

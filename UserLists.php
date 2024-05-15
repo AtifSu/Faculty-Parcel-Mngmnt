@@ -35,6 +35,7 @@ mysqli_close($connect);
   <title>User Lists</title>
   <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="custom.css">
   <script src="js/bootstrap.bundle.js"></script>
 </head>
 

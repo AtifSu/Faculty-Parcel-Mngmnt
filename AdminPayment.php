@@ -21,6 +21,7 @@ if (isset($_POST['search'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manage Payment</title>
   <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="custom.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <script src="js/bootstrap.bundle.js"></script>
 </head>
@@ -90,7 +91,7 @@ if (isset($_POST['search'])) {
     <div class="card mt-4 ms-5 p-3 w-100">
       <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
         <div class="mb-3 row">
-          <h2 class="text-center">Manage Appointment</h2>
+          <h2 class="text-center h2">Manage Appointment</h2>
           <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="input-group">
               <input type="text" class="form-control" name="search" placeholder="Search" aria-label="Search" aria-describedby="search-btn">
