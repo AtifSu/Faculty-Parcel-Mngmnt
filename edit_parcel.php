@@ -1,14 +1,17 @@
 <?php
 include('php/connect.php');
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $ParcelID = $_POST['ParcelID'];
-    $ParcelStatus = $_POST['ParcelStatus'];
+    $AdminID = $_POST['AdminID'];
+    $AdminEmail = $_POST['AdminEmail'];
+    $AdminPass = $_POST['AdminPass'];
 
-    error_log("ParcelID: $ParcelID");
-    error_log("ParcelStatus: $ParcelStatus");
+    error_log("AdminID: $AdminID");
+    error_log("AdminEmail: $AdminEmail");
+    error_log("AdminPass: $AdminPass");
 
-    $sql = "UPDATE Parcel SET ParcelStatus = ? WHERE ParcelID = ?";
+    $sql = "UPDATE FSPAdmin SET AdminEmail = ?, AdminPass = ? WHERE AdminID = ?";
     $stmt = mysqli_prepare($connect, $sql);
 
     if (!$stmt) {
@@ -17,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    mysqli_stmt_bind_param($stmt, "si", $ParcelStatus, $ParcelID);
+    mysqli_stmt_bind_param($stmt, "ssi", $AdminEmail, $AdminPass, $AdminID);
     mysqli_stmt_execute($stmt);
 
     if (mysqli_stmt_affected_rows($stmt) > 0) {

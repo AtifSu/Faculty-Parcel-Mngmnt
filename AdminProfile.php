@@ -38,7 +38,7 @@ mysqli_close($connect);
   <link rel="stylesheet" href="custom.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <script src="js/bootstrap.bundle.js"></script>
-  <title>Profile</title>
+  <title>Admin Profile</title>
 </head>
 
 <body>
@@ -115,8 +115,8 @@ mysqli_close($connect);
             Change Email
           </a>
           <br>
-          <input class="btn btn-primary" type="submit" name="update-StdPass" value="Update">
-          <input class="btn btn-primary" type="submit" name="update-StdEmail" value="Update">
+          <input class="btn btn-primary" type="submit" name="update-AdminPass" value="Update Password">
+          <input class="btn btn-primary" type="submit" name="update-AdminEmail" value="Update Email">
 
         </form>
       </div>

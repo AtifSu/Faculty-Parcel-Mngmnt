@@ -38,7 +38,7 @@ mysqli_close($connect);
   <link rel="stylesheet" href="custom.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <script src="js/bootstrap.bundle.js"></script>
-  <title>Profile</title>
+  <title>Student Profile</title>
 </head>
 
 <body>

@@ -1,26 +1,25 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 include ('connect.php');
+session_start(); 
 
-if (isset($_SESSION['email']) && (isset($_POST['update-StdEmail']) || isset($_POST['update-StdPass']))) {
-  $StdEmail = $_POST['StdEmail'];
-  $StdPass = $_POST['StdPass'];
-  $id = $_SESSION['StdID'];     
-  if (isset($_POST['update-StdEmail'])) {
-    $sql = "UPDATE Student SET StdEmail = ? WHERE StdID = ?";
+if (isset($_SESSION['email']) && (isset($_POST['update-AdminEmail']) || isset($_POST['update-AdminPass']))) {
+  $id = $_SESSION['AdminID']; 
+
+  if (isset($_POST['update-AdminEmail'])) {
+    $AdminEmail = $_POST['AdminEmail'];
+    $sql = "UPDATE FSPAdmin SET AdminEmail = ? WHERE AdminID = ?";
     $stmt = $connect->prepare($sql);
-    $stmt->bind_param("ss", $StdEmail, $id);
+    $stmt->bind_param("si", $AdminEmail, $id);
   } else {
-    $hashedPassword = password_hash($StdPass, PASSWORD_DEFAULT); // Hash password if updating password
-    $sql = "UPDATE Student SET StdPass = ? WHERE StdID = ?";
+    $AdminPass = $_POST['AdminPass'];
+    $sql = "UPDATE FSPAdmin SET AdminPass = ? WHERE AdminID = ?";
     $stmt = $connect->prepare($sql);
-    $stmt->bind_param("si", $hashedPassword, $id);
+    $stmt->bind_param("si", $AdminPass, $id); 
   }
 
   if ($stmt->execute()) {
-    echo " <script>alert('Update Successful!');
-             window.location='StdProfile.php'</script> ";
+    echo "<script>alert('Update Successful!');
+          window.location='../AdminProfile.php'</script>";
   } else {
     echo "Error updating fields: " . mysqli_error($connect);
   }
