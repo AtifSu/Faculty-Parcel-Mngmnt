@@ -107,9 +107,9 @@ if (isset($_POST['search'])) {
               <div class="card my-3">
                 <div class="card-body">
                   <h5 class="card-title">Appointment Details</h5>
-                  <p class="card-text">Matrics ID: <?php echo $row["StdID"]; ?></p>
-                  <p class="card-text">Appointment Date: <?php echo $row["AppointmentDate"]; ?></p>
-                  <p class="card-text">Appointment Time: <?php echo $row["AppointmentTime"]; ?></p>
+                  <p class="card-text">Matrics ID: <strong><?php echo $row["StdID"]; ?></p></strong>
+                  <p class="card-text">Appointment Date: <strong><?php echo $row["AppointmentDate"]; ?></p></strong>
+                  <p class="card-text">Appointment Time: <strong><?php echo $row["AppointmentTime"]; ?></p></strong>
                 </div>
               </div>
           <?php

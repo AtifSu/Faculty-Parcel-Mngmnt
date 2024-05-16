@@ -14,7 +14,7 @@ if (isset($_SESSION['StdID'])) {
         $StdName = $row['StdName'];
         $StdID = $row['StdID'];
         $StdEmail = $row['StdEmail'];
-        break; 
+        break;
       }
     }
   } else {
@@ -88,27 +88,16 @@ mysqli_close($connect);
         <p><strong>Name:</strong> <?php echo $StdName; ?></span></p>
         <p><strong>Matrics ID:</strong> <?php echo $StdID; ?></span></p>
         <p><strong>Email:</strong> <?php echo $StdEmail; ?></span></p>
-        <p>
-          <input type="password" id="passwordField" hidden>
-        </p>
-        <p>
-          <input type="text" id="emailField" hidden>
-        </p>
-        <form action="php/edit.php" method="post">
-          <a class="icon-link" href="#" onclick="showPasswordField()"> <svg class="bi" aria-hidden="true">
-              <use xlink:href="#box-seam"></use>
-            </svg>
-            Change Password
-          </a>
-          <a class="icon-link" href="#" onclick="showEmailField()"> <svg class="bi" aria-hidden="true">
-              <use xlink:href="#box-seam"></use>
-            </svg>
-            Change Email
-          </a>
+        <form action="php/stdUpdate.php" method="POST">
+          <p>
+            <input type="password" class="form-control" id="passwordField" name="StdPass" placeholder="Enter new password">
+          </p>
+          <p>
+            <input type="email" class="form-control" id="emailField" name="StdEmail" placeholder="Enter new email">
+          </p>
+          <input type="hidden" name="AdminEmail" value="<?php echo $StdEmail; ?>">
           <br>
-          <input class="btn btn-primary" type="submit" name="update-StdPass" value="Update">
-          <input class="btn btn-primary" type="submit" name="update-StdEmail" value="Update">
-
+          <input class="btn btn-primary" type="submit" name="submit" value="Update Profile">
         </form>
       </div>
 
@@ -141,14 +130,7 @@ mysqli_close($connect);
         });
       });
     }
-    //Hidden toggle 
-    function showPasswordField() {
-      document.getElementById("passwordField").hidden = false;
-    }
-    function showEmailField() {
-      document.getElementById("emailField").hidden = false;
-    }
-
   </script>
 </body>
+
 </html>

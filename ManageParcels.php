@@ -4,7 +4,9 @@ session_start();
 $ParcelID = null;
 $sql = "SELECT StdID, ParcelID,ParcelTrackingNum, ParcelCourier, ParcelStatus FROM Parcel";
 $result = mysqli_query($connect, $sql);
+
 //Search
+
 if (isset($_GET['search'])) {
   $search = $_GET['search'];
   $sql = "SELECT ParcelID, StdID, ParcelTrackingNum, ParcelCourier, ParcelStatus FROM Parcel WHERE StdID LIKE '%$search%' OR ParcelTrackingNum LIKE '%$search%'";
@@ -12,23 +14,26 @@ if (isset($_GET['search'])) {
   $sql = "SELECT ParcelID, StdID, ParcelTrackingNum, ParcelCourier, ParcelStatus FROM Parcel";
 }
 $result = mysqli_query($connect, $sql);
-// Delete
-if (isset($_GET['StdID'])) {
-  $StdID = $_GET['StdID'];
 
-  $sql = "DELETE FROM Parcel WHERE StdID = ?";
+$ParcelID = null;
+
+if (isset($_GET['ParcelID'])) {
+  $ParcelID = $_GET['ParcelID'];
+
+  $sql = "DELETE FROM Parcel WHERE ParcelID = ?";
   $stmt = mysqli_prepare($connect, $sql);
-  mysqli_stmt_bind_param($stmt, "i", $StdID);
-  mysqli_stmt_execute($stmt);
 
-  if (mysqli_stmt_affected_rows($stmt) > 0) {
-    echo json_encode(array("success" => true));
+  mysqli_stmt_bind_param($stmt, "i", $ParcelID);
+
+  if (mysqli_stmt_execute($stmt)) {
+    if (mysqli_stmt_affected_rows($stmt) > 0) {
+      echo json_encode(array("success" => true));
+    } else {
+      echo json_encode(array("success" => false, "error" => "No parcel found with the specified ID."));
+    }
   } else {
-    // Log the error message
-    error_log("Error deleting parcel: " . mysqli_error($connect));
-    echo json_encode(array("success" => false));
+    echo json_encode(array("success" => false, "error" => mysqli_error($connect)));
   }
-
   mysqli_stmt_close($stmt);
   mysqli_close($connect);
 
@@ -94,7 +99,7 @@ if (isset($_GET['StdID'])) {
       <div class="col">
         <div class="row justify-content-center">
           <div class="h2 col-auto">
-            <a type="button" class="bi bi-plus-square" style="color: #F46E75"data-bs-toggle="modal" data-bs-target="#exampleModal"></a>
+            <a type="button" class="bi bi-plus-square" style="color: #F46E75" data-bs-toggle="modal" data-bs-target="#exampleModal"></a>
           </div>
           <div class="col-sm-6">
             <form action="ManageParcels.php" method="get" id="searchForm">
@@ -293,49 +298,50 @@ if (isset($_GET['StdID'])) {
         var formData = new FormData(form);
 
         fetch('edit_parcel.php', {
-          method: 'POST',
-          body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            alert("Successfully updated the parcel.");
-            location.reload();
-          } else {
-            alert("Failed to update parcel. The server responded with an error.");
-          }
-        })
-        .catch(error => {
-          console.error("Error:", error);
-          alert("Error updating parcel.");
-        });
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert("Successfully updated the parcel.");
+              location.reload();
+            } else {
+              alert("Failed to update parcel. The server responded with an error.");
+            }
+          })
+          .catch(error => {
+            console.error("Error:", error);
+            alert("Error updating parcel.");
+          });
       }
 
       // Remove parcel
+      // Remove parcel
       function removeParcel(ParcelID) {
-        fetch('delete_parcel.php?ParcelID=' + ParcelID, {
-          method: 'GET'
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (data.success) {
-            alert("Successfully removed the parcel.");
-            location.reload();
-          } else {
-            alert("Failed to remove parcel. The server responded with an error.");
-          }
-        })
-        .catch(error => {
-          console.error("Error:", error);
-          alert("Error removing parcel.");
-        });
-        event.preventDefault();
+        fetch('ManageParcels.php?ParcelID=' + ParcelID, {
+            method: 'GET'
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (data.success) {
+              alert("Successfully removed the parcel.");
+              location.reload();
+            } else {
+              alert("Failed to remove parcel. " + data.error);
+            }
+          })
+          .catch(error => {
+            console.error("Error:", error);
+            alert("Error removing parcel.");
+          });
       }
+
 
       // Searching function
       document.addEventListener("DOMContentLoaded", function() {

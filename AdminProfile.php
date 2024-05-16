@@ -14,7 +14,7 @@ if (isset($_SESSION['AdminID'])) {
         $AdminName = $row['AdminName'];
         $AdminID = $row['AdminID'];
         $AdminEmail = $row['AdminEmail'];
-        break; 
+        break;
       }
     }
   } else {
@@ -24,8 +24,6 @@ if (isset($_SESSION['AdminID'])) {
   header("Location: login.html");
   exit();
 }
-
-mysqli_close($connect);
 ?>
 
 <!DOCTYPE html>
@@ -82,45 +80,36 @@ mysqli_close($connect);
   <div class="container text-center mt-5">
     <div class="row justify-content-md-center">
       <div class="col col-lg-2">
-
         <div class="card float-end" style="width: 18rem;">
           <form action="php/upload.php" method="post" enctype="multipart/form-data">
             <img src="uploads/<?php echo isset($newImageName) ? $newImageName : ''; ?>" alt="Profile Image">
             <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" required>
             <button type="submit" class="btn btn-primary" name="upload">Upload</button>
-            <input type="hidden" name="StdID" value="<?php echo $_SESSION['StdID']; ?>">
+            <input type="hidden" name="AdminID" value="<?php echo $_SESSION['AdminID']; ?>">
           </form>
         </div>
       </div>
 
       <div class="col-md-auto">
+
         <p><strong>Name:</strong> <?php echo $AdminName; ?></span></p>
-        <p><strong>Matrics ID:</strong> <?php echo $AdminID; ?></span></p>
+        <p><strong>Admin ID:</strong> <?php echo $AdminID; ?></span></p>
         <p><strong>Email:</strong> <?php echo $AdminEmail; ?></span></p>
-        <p>
-          <input type="password" id="passwordField" hidden>
-        </p>
-        <p>
-          <input type="text" id="emailField" hidden>
-        </p>
-        <form action="php/edit.php" method="post">
-          <a class="icon-link" href="#" onclick="showPasswordField()"> <svg class="bi" aria-hidden="true">
-              <use xlink:href="#box-seam"></use>
-            </svg>
-            Change Password
-          </a>
-          <a class="icon-link" href="#" onclick="showEmailField()"> <svg class="bi" aria-hidden="true">
-              <use xlink:href="#box-seam"></use>
-            </svg>
-            Change Email
-          </a>
+        <form action="php/edit.php" method="POST">
+          <p>
+            <input type="password" class="form-control" id="passwordField" name="AdminPass" placeholder="Enter new password">
+          </p>
+          <p>
+            <input type="email" class="form-control" id="emailField" name="AdminEmail" placeholder="Enter new email">
+          </p>
+          <input type="hidden" name="AdminEmail" value="<?php echo $AdminEmail; ?>">
           <br>
-          <input class="btn btn-primary" type="submit" name="update-AdminPass" value="Update Password">
-          <input class="btn btn-primary" type="submit" name="update-AdminEmail" value="Update Email">
-
+          <input class="btn btn-primary" type="submit" name="submit" value="Update Profile">
         </form>
-      </div>
 
+
+      </div>
+      <!-- Logout -->
       <div class="col col-lg-2">
         <div class="h2 float-end">
           <a class="icon-link" href="php/logout.php">
@@ -132,13 +121,11 @@ mysqli_close($connect);
     </div>
   </div>
 
-
   <div class="toast-container position-fixed top-0 end-0 p-3">
     <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
         <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
         <strong class="me-auto">Faculty Parcel Management</strong>
-        <!-- <small class="text-body-secondary">just now</small> -->
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
@@ -150,7 +137,6 @@ mysqli_close($connect);
       <div class="toast-header">
         <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
         <strong class="me-auto">Faculty Parcel Management</strong>
-        <!-- <small class="text-body-secondary">2 seconds ago</small> -->
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
@@ -158,17 +144,16 @@ mysqli_close($connect);
       </div>
     </div>
   </div>
+
   <script>
-    //Toast Notifications Function
+    // Toast Notifications Function
     var toastTrigger = document.getElementById('liveToastBtn');
     var toasts = document.querySelectorAll('.toast');
 
     if (toastTrigger) {
       toastTrigger.addEventListener('click', function() {
-
         toasts.forEach(function(toast, index) {
-          var delay = index * 1000; // 1000 milliseconds = 1 seconds
-
+          var delay = index * 1000; // 1000 milliseconds = 1 second
           setTimeout(function() {
             var bsToast = new bootstrap.Toast(toast);
             bsToast.show();
@@ -176,14 +161,7 @@ mysqli_close($connect);
         });
       });
     }
-    //Hidden toggle 
-    function showPasswordField() {
-      document.getElementById("passwordField").hidden = false;
-    }
-
-    function showEmailField() {
-      document.getElementById("emailField").hidden = false;
-    }
   </script>
 </body>
+
 </html>

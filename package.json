@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@uploadthing/react": "^6.5.4",
+    "big-integer": "^1.6.52",
+    "text-encoding": "^0.7.0",
+    "uploadthing": "^6.10.4"
+  }
+}
