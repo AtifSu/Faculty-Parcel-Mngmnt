@@ -2,25 +2,65 @@
 include('php/connect.php');
 session_start();
 
+// Fetch user details if id is provided
 if (isset($_GET['id'])) {
   $StdID = $_GET['id'];
 
   $sql = "SELECT StdName, StdID, StdEmail, StdPass FROM Student WHERE StdID = ?";
-
   $stmt = mysqli_prepare($connect, $sql);
-
   mysqli_stmt_bind_param($stmt, "s", $StdID);
-
   mysqli_stmt_execute($stmt);
-
   mysqli_stmt_bind_result($stmt, $StdName, $StdID, $StdEmail, $StdPass);
-
   mysqli_stmt_fetch($stmt);
-
   mysqli_stmt_close($stmt);
 } else {
   header("Location: error.php");
   exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if (isset($_POST['delete'])) {
+    // Delete user profile
+    $deleteSql = "DELETE FROM Student WHERE StdID = ?";
+    $deleteStmt = mysqli_prepare($connect, $deleteSql);
+    mysqli_stmt_bind_param($deleteStmt, "s", $StdID);
+
+    if (mysqli_stmt_execute($deleteStmt)) {
+      mysqli_stmt_close($deleteStmt);
+      mysqli_close($connect);
+      $_SESSION['message'] = 'Profile Deleted Successfully!';
+      header("Location: AdminHome.php");
+      exit;
+    } else {
+      $errorMessage = "Failed to delete profile: " . mysqli_error($connect);
+      mysqli_stmt_close($deleteStmt);
+    }
+  } else {
+    // Update user profile
+    $newEmail = $_POST['StdEmail'];
+    $newPassword = $_POST['StdPass'];
+
+    $updateSql = "UPDATE Student SET StdEmail = ?, StdPass = ? WHERE StdID = ?";
+    $updateStmt = mysqli_prepare($connect, $updateSql);
+    mysqli_stmt_bind_param($updateStmt, "sss", $newEmail, $newPassword, $StdID);
+
+    if (mysqli_stmt_execute($updateStmt)) {
+      $_SESSION['message'] = 'Profile updated successfully!';
+    } else {
+      $errorMessage = "Failed to update profile: " . mysqli_error($connect);
+    }
+
+    mysqli_stmt_close($updateStmt);
+
+    // Fetch the updated details
+    $sql = "SELECT StdName, StdID, StdEmail, StdPass FROM Student WHERE StdID = ?";
+    $stmt = mysqli_prepare($connect, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $StdID);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_bind_result($stmt, $StdName, $StdID, $StdEmail, $StdPass);
+    mysqli_stmt_fetch($stmt);
+    mysqli_stmt_close($stmt);
+  }
 }
 
 mysqli_close($connect);
@@ -88,30 +128,26 @@ mysqli_close($connect);
       </div>
 
       <div class="col-md-auto">
-        <p><strong>Name:</strong> <?php echo $StdName; ?></span></p>
-        <p><strong>Matrics ID:</strong> <?php echo $StdID; ?></span></p>
-        <p><strong>Email:</strong> <?php echo $StdEmail; ?></span></p>
-        <p>
-          <input type="password" id="passwordField" hidden>
-        </p>
-        <p>
-          <input type="text" id="emailField" hidden>
-        </p>
-        <form action="php/edit.php" method="post">
-          <a class="icon-link" href="#" onclick="showPasswordField()"> <svg class="bi" aria-hidden="true">
-              <use xlink:href="#box-seam"></use>
-            </svg>
-            Change Password
-          </a>
-          <a class="icon-link" href="#" onclick="showEmailField()"> <svg class="bi" aria-hidden="true">
-              <use xlink:href="#box-seam"></use>
-            </svg>
-            Change Email
-          </a>
+        <?php if (isset($errorMessage)) : ?>
+          <div class="alert alert-danger" role="alert">
+            <?php echo $errorMessage; ?>
+          </div>
+        <?php endif; ?>
+        <p><strong>Name:</strong> <?php echo $StdName; ?></p>
+        <p><strong>Matrics ID:</strong> <?php echo $StdID; ?></p>
+        <p><strong>Email:</strong> <?php echo $StdEmail; ?></p>
+        <form action="" method="POST">
+          <p>
+            <input type="password" class="form-control" id="passwordField" name="StdPass" placeholder="Enter new password">
+          </p>
+          <p>
+            <input type="email" class="form-control" id="emailField" name="StdEmail" placeholder="Enter new email">
+          </p>
+          <input type="hidden" name="AdminEmail" value="<?php echo $StdEmail; ?>">
           <br>
-          <input class="btn btn-primary" type="submit" name="update-StdPass" value="Reset">
-
-          <input class="btn btn-primary float-end" type="submit" name="update-StdEmail" value="Delete">
+          <input class="btn btn-primary" type="submit" name="submit" value="Update Profile">
+          <br>
+          <input class="btn btn-danger mt-2" type="submit" name="delete" value="Delete Profile">
         </form>
       </div>
     </div>
@@ -122,7 +158,6 @@ mysqli_close($connect);
       <div class="toast-header">
         <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
         <strong class="me-auto">Faculty Parcel Management</strong>
-        <!-- <small class="text-body-secondary">just now</small> -->
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
@@ -134,7 +169,6 @@ mysqli_close($connect);
       <div class="toast-header">
         <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
         <strong class="me-auto">Faculty Parcel Management</strong>
-        <!-- <small class="text-body-secondary">2 seconds ago</small> -->
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
@@ -142,6 +176,13 @@ mysqli_close($connect);
       </div>
     </div>
   </div>
+
+  <?php
+  if (isset($_SESSION['message'])) {
+    echo "<script>alert('" . $_SESSION['message'] . "');</script>";
+    unset($_SESSION['message']);
+  }
+  ?>
 
   <script>
     var toastTrigger = document.getElementById('liveToastBtn');
@@ -151,7 +192,7 @@ mysqli_close($connect);
       toastTrigger.addEventListener('click', function() {
 
         toasts.forEach(function(toast, index) {
-          var delay = index * 1000; // 1000 milliseconds = 1 seconds
+          var delay = index * 1000; // 1000 milliseconds = 1 second
 
           setTimeout(function() {
             var bsToast = new bootstrap.Toast(toast);
@@ -159,14 +200,6 @@ mysqli_close($connect);
           }, delay);
         });
       });
-    }
-    //Hidden toggle 
-    function showPasswordField() {
-      document.getElementById("passwordField").hidden = false;
-    }
-
-    function showEmailField() {
-      document.getElementById("emailField").hidden = false;
     }
   </script>
 </body>
