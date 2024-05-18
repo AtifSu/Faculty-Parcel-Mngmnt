@@ -6,6 +6,7 @@ if (isset($_POST['email'], $_POST['password'])) {
   $email = $_POST['email'];
   $password = $_POST['password'];
 
+  // Admin login check
   $sql = "SELECT * FROM FSPAdmin WHERE AdminEmail = ? AND AdminPass = ?";
   $stmt = mysqli_prepare($connect, $sql);
   mysqli_stmt_bind_param($stmt, "ss", $email, $password);
@@ -22,10 +23,10 @@ if (isset($_POST['email'], $_POST['password'])) {
 
     echo "<script>alert('Logged in as admin with email: " . $admin['AdminEmail'] . "');</script>";
     header("Location: AdminHome.php");
-
     exit();
   }
 
+  // Student login check
   $sql = "SELECT * FROM Student WHERE StdEmail = ? AND StdPass = ?";
   $stmt = mysqli_prepare($connect, $sql);
   mysqli_stmt_bind_param($stmt, "ss", $email, $password);
@@ -40,11 +41,31 @@ if (isset($_POST['email'], $_POST['password'])) {
 
     session_regenerate_id(true);
 
+    // Check for parcels ready for pickup
+    $studentID = $student['StdID'];
+    $query = "SELECT ParcelTrackingNum FROM Parcel WHERE StdID = '$studentID' AND ParcelStatus = 'Ready for pickup'";
+    $result = mysqli_query($connect, $query);
+
+    if ($result) {
+        $readyParcels = [];
+        while ($parcel = mysqli_fetch_assoc($result)) {
+            $readyParcels[] = $parcel['ParcelTrackingNum'];
+        }
+
+        if (!empty($readyParcels)) {
+            $_SESSION['pickup_notification'] = "Parcel is ready for pickup: " . implode(", ", $readyParcels);
+        } else {
+            unset($_SESSION['pickup_notification']);
+        }
+    } else {
+        echo 'Database error: ' . mysqli_error($connect);
+    }
+
     header("Location: trackPackage.php");
     echo "<script>alert('Logged in as student with email: " . $student['StdEmail'] . "');</script>";
-
     exit();
   }
+
   echo "<script>alert('Incorrect Email or Password'); window.location='login.html'</script>";
 }
 ?>

@@ -1,9 +1,7 @@
 <?php
 include('php/connect.php');
-include('php/stdUpdate.php');
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -111,30 +109,27 @@ include('php/stdUpdate.php');
     <div aria-live="polite" aria-atomic="true" class="position-relative">
       <div class="toast-container position-fixed top-0 end-0 p-3">
         <?php
-        if (isset($_SESSION['update_success'])) {
-          echo '<div class="toast-container position-fixed top-0 end-0 p-3">
-                      <div class="toast align-items-center text-bg border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-                          <div class="toast-header">
-                              <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
-                              <strong class="me-auto">Faculty Parcel Management</strong>
-                              <button type="button" class="btn-close btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                          </div>
-                          <div class="toast-body">' . $_SESSION['update_success'] . '</div>
-                      </div>
-                    </div>';
-        }
-        if (isset($_SESSION['update_error'])) {
-          echo '<div class="toast-container position-fixed top-0 end-0 p-3">
-                    <div class="toast align-items-center text-bg border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-                        <div class="toast-header">
-                            <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
-                            <strong class="me-auto">Faculty Parcel Management</strong>
-                            <button type="button" class="btn-close btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                        <div class="toast-body">' . $_SESSION['update_error'] . '</div>
-                    </div>
-                  </div>';
-        }
+        if (isset($_SESSION['appointment_success'])) {
+          echo '<div class="toast align-items-center text-bg border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                  <div class="toast-header">
+                      <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
+                      <strong class="me-auto">Faculty Parcel Management</strong>
+                      <button type="button" class="btn-close btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                  </div>
+                  <div class="toast-body">' . $_SESSION['appointment_success'] . '</div>
+              </div>';
+      }
+
+      if (isset($_SESSION['appointment_error'])) {
+          echo '<div class="toast align-items-center text-bg border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                  <div class="toast-header">
+                      <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
+                      <strong class="me-auto">Faculty Parcel Management</strong>
+                      <button type="button" class="btn-close btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                  </div>
+                  <div class="toast-body">' . $_SESSION['appointment_error'] . '</div>
+              </div>';
+      }
         ?>
       </div>
     </div>

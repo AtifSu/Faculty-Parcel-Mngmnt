@@ -1,28 +1,22 @@
 <?php
+session_start();
 include('php/connect.php');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $AppointmentDate = $_POST['AppointmentDate'];
-    $AppointmentTime = $_POST['AppointmentTime'];
-    $StdID = $_POST['StdID'];
-    $ParcelTrackingNum = $_POST['ParcelTrackingNum'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $appointmentDate = $_POST['AppointmentDate'];
+    $appointmentTime = $_POST['AppointmentTime'];
+    $stdID = $_POST['StdID'];
+    $parcelTrackingNum = $_POST['ParcelTrackingNum'];
 
-    $sql = "INSERT INTO Appointment (AppointmentDate, AppointmentTime, StdID, ParcelTrackingNum) VALUES (?, ?, ?, ?)";
-
-    $stmt = mysqli_prepare($connect, $sql);
-
-    mysqli_stmt_bind_param($stmt, "ssss", $AppointmentDate, $AppointmentTime, $StdID, $ParcelTrackingNum);
-
-    if (mysqli_stmt_execute($stmt)) {
-        echo "<script>alert('Appointment booked successfully!');</script>";
-        echo "<script>window.location.href = 'StdPayment.php';</script>";
+    $sql = "INSERT INTO Appointment (AppointmentDate, AppointmentTime, StdID, ParcelTrackingNum) VALUES ('$appointmentDate', '$appointmentTime', '$stdID', '$parcelTrackingNum')";
+     
+    if (mysqli_query($connect, $sql)) {
+        $_SESSION['appointment_success'] = "Appointment successfully booked at " . "$appointmentDate" . " $appointmentTime";
     } else {
-        echo "<script>alert('Error: " . mysqli_stmt_error($stmt) . "');</script>"; 
-        echo "<script>window.location.href = 'StdPayment.php';</script>";
+        $_SESSION['appointment_error'] = "Failed to book appointment: " . mysqli_error($connect);
     }
 
-    mysqli_stmt_close($stmt);
+    mysqli_close($connect);
+    header("Location: StdPayment.php");
+    exit();
 }
-
-mysqli_close($connect);
-?>

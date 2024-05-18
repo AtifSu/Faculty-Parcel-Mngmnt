@@ -134,7 +134,7 @@ mysqli_close($connect);
                         <div class="toast-body">' . $_SESSION['update_error'] . '</div>
                     </div>
                   </div>';
-        }
+        } 
             ?>
         </div>
     </div>

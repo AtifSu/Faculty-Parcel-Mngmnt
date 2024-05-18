@@ -1,6 +1,6 @@
 <?php
+session_start();
 include('php/connect.php');
-include('php/stdUpdate.php');
 
 $parcelStatus = "";
 $parcelArriveDate = "";
@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $trackingNumber = isset($_POST['ParcelTrackingNum']) ? $_POST['ParcelTrackingNum'] : '';
 
   if (empty($trackingNumber)) {
-    echo 'Tracking number is required.';
+    echo "<script>alert('Tracking number is required');</script>";
   } else {
     $trackingNumber = mysqli_real_escape_string($connect, $trackingNumber);
     $query = "SELECT ParcelStatus, ParcelArriveDate FROM Parcel WHERE ParcelTrackingNum = '$trackingNumber'";
@@ -20,8 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $parcel = mysqli_fetch_assoc($result);
         $parcelStatus = htmlspecialchars($parcel['ParcelStatus']);
         $parcelArriveDate = htmlspecialchars($parcel['ParcelArriveDate']);
+
+        if ($parcelStatus == 'Ready for pickup') {
+          $_SESSION['pickup_notification'] = "Parcel is ready for pickup.";
+        } else {
+          unset($_SESSION['pickup_notification']);
+        }
       } else {
-        echo 'No parcel found with the provided tracking number.';
+        echo "<script>alert('No parcel found with the provided tracking number.`');</script>";
       }
     } else {
       echo 'Database error: ' . mysqli_error($connect);
@@ -93,35 +99,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <div id="trackingInfo2" class="sec-color alert alert-light w-75 mx-auto" role="alert">
     <strong>Parcel Arrival Date:</strong> <?php echo $parcelArriveDate; ?>
   </div>
+
   <!-- Toast Notifications -->
   <div aria-live="polite" aria-atomic="true" class="position-relative">
     <div class="toast-container position-fixed top-0 end-0 p-3">
-      <?php
-      if (isset($_SESSION['update_success'])) {
-        echo '<div class="toast-container position-fixed top-0 end-0 p-3">
-                      <div class="toast align-items-center text-bg border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-                          <div class="toast-header">
-                              <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
-                              <strong class="me-auto">Faculty Parcel Management</strong>
-                              <button type="button" class="btn-close btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                          </div>
-                          <div class="toast-body">' . $_SESSION['update_success'] . '</div>
-                      </div>
-                    </div>';
-      }
-      if (isset($_SESSION['update_error'])) {
-        echo '<div class="toast-container position-fixed top-0 end-0 p-3">
-                    <div class="toast align-items-center text-bg border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-                        <div class="toast-header">
-                            <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
-                            <strong class="me-auto">Faculty Parcel Management</strong>
-                            <button type="button" class="btn-close btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                        <div class="toast-body">' . $_SESSION['update_error'] . '</div>
-                    </div>
-                  </div>';
-      }
-      ?>
+      <?php if (isset($_SESSION['pickup_notification'])) { ?>
+        <div class="toast align-items-center text-bg border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+          <div class="toast-header">
+            <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
+            <strong class="me-auto">Faculty Parcel Management</strong>
+            <button type="button" class="btn-close btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+            <?php echo $_SESSION['pickup_notification']; ?>
+          </div>
+        </div>
+      <?php unset($_SESSION['pickup_notification']); } ?>
     </div>
   </div>
 

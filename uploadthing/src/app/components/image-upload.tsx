@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { UploadButton } from "../utils/uploadthing";
+import Image from 'next/image'
 
 const ImageUpload = () => {
 
-    const [imageUrl, setImageUrl] = useState<String> ('');
+    const [imageUrl, setImageUrl] = useState<string> ('');
 
     return ( 
     <div>
