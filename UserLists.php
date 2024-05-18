@@ -2,7 +2,6 @@
 include('php/connect.php');
 session_start();
 
-// Fetch user details if id is provided
 if (isset($_GET['id'])) {
   $StdID = $_GET['id'];
 
@@ -28,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (mysqli_stmt_execute($deleteStmt)) {
       mysqli_stmt_close($deleteStmt);
       mysqli_close($connect);
-      $_SESSION['message'] = 'Profile Deleted Successfully!';
+      $_SESSION['message'] = 'Successfully deleted the student account!';
+      $_SESSION['toast_type'] = 'success';
       header("Location: AdminHome.php");
       exit;
     } else {
@@ -36,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       mysqli_stmt_close($deleteStmt);
     }
   } else {
-    // Update user profile
     $newEmail = $_POST['StdEmail'];
     $newPassword = $_POST['StdPass'];
 
@@ -46,13 +45,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (mysqli_stmt_execute($updateStmt)) {
       $_SESSION['message'] = 'Profile updated successfully!';
+      $_SESSION['toast_type'] = 'success';
     } else {
       $errorMessage = "Failed to update profile: " . mysqli_error($connect);
+      $_SESSION['message'] = $errorMessage;
+      $_SESSION['toast_type'] = 'error';
     }
 
     mysqli_stmt_close($updateStmt);
 
-    // Fetch the updated details
     $sql = "SELECT StdName, StdID, StdEmail, StdPass FROM Student WHERE StdID = ?";
     $stmt = mysqli_prepare($connect, $sql);
     mysqli_stmt_bind_param($stmt, "s", $StdID);
@@ -65,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 mysqli_close($connect);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -153,34 +155,29 @@ mysqli_close($connect);
     </div>
   </div>
 
+  <!-- Toast Notifications -->
   <div class="toast-container position-fixed top-0 end-0 p-3">
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast" id="successToast" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
         <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
         <strong class="me-auto">Faculty Parcel Management</strong>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
-        Parcels Have Arrived
-      </div>
-    </div>
-
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header">
-        <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
-        <strong class="me-auto">Faculty Parcel Management</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div class="toast-body">
-        Appointment booked
+        <?php echo isset($_SESSION['message']) ? $_SESSION['message'] : ''; ?>
       </div>
     </div>
   </div>
 
   <?php
   if (isset($_SESSION['message'])) {
-    echo "<script>alert('" . $_SESSION['message'] . "');</script>";
-    unset($_SESSION['message']);
+    echo "<script>
+            document.addEventListener('DOMContentLoaded', function () {
+              var toast = new bootstrap.Toast(document.getElementById('successToast'));
+              
+            });
+          </script>";
+
   }
   ?>
 

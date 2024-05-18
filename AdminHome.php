@@ -10,10 +10,21 @@ if (isset($_POST['search'])) {
   $sql = "SELECT StdName, StdID, StdEmail FROM Student";
   $result = mysqli_query($connect, $sql);
 }
+
+if (isset($_SESSION['message'])) {
+  $message = $_SESSION['message'];
+  $toast_type = isset($_SESSION['toast_type']) ? $_SESSION['toast_type'] : 'info';
+  unset($_SESSION['message']);
+  unset($_SESSION['toast_type']);
+} else {
+  $message = "";
+  $toast_type = "info";
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -125,27 +136,14 @@ if (isset($_POST['search'])) {
 
   <!-- Toast container -->
   <div class="toast-container position-fixed top-0 end-0 p-3">
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast" id="successToast" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
         <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
         <strong class="me-auto">Faculty Parcel Management</strong>
-        <!-- <small class="text-body-secondary">just now</small> -->
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
-        Parcels Have Arrived
-      </div>
-    </div>
-
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header">
-        <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
-        <strong class="me-auto">Faculty Parcel Management</strong>
-        <!-- <small class="text-body-secondary">2 seconds ago</small> -->
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div class="toast-body">
-        Appointment booked
+        <?php echo $message; ?>
       </div>
     </div>
   </div>

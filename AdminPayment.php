@@ -10,12 +10,16 @@ if (isset($_POST['delete_appointment']) && isset($_POST['StdID'])) {
   mysqli_stmt_bind_param($stmt, "s", $StdID);
 
   if (mysqli_stmt_execute($stmt)) {
-    $delete_message = "Appointment deleted successfully.";
+    $_SESSION['toast_message'] = "Appointment deleted successfully.";
+    $_SESSION['toast_type'] = "success"; // Optional: you can set different types of toasts
   } else {
-    $delete_message = "Failed to delete appointment: " . mysqli_error($connect);
+    $_SESSION['toast_message'] = "Failed to delete appointment: " . mysqli_error($connect);
+    $_SESSION['toast_type'] = "danger";
   }
 
   mysqli_stmt_close($stmt);
+  header("Location: " . $_SERVER['PHP_SELF']);
+  exit();
 }
 
 // Handle search functionality
@@ -27,6 +31,11 @@ if (isset($_POST['search'])) {
   $sql = "SELECT StdID, AppointmentDate, AppointmentTime FROM Appointment";
   $result = mysqli_query($connect, $sql);
 }
+
+$toast_message = isset($_SESSION['toast_message']) ? $_SESSION['toast_message'] : '';
+$toast_type = isset($_SESSION['toast_type']) ? $_SESSION['toast_type'] : '';
+unset($_SESSION['toast_message']);
+unset($_SESSION['toast_type']);
 ?>
 
 <!DOCTYPE html>
@@ -113,10 +122,6 @@ if (isset($_POST['search'])) {
             </div>
           </form>
           <?php
-          if (isset($delete_message)) {
-            echo "<p>$delete_message</p>";
-            echo "<script>alert('Appointment Deleted!');</script>";
-          }
           if (isset($result) && mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
           ?>
@@ -143,51 +148,40 @@ if (isset($_POST['search'])) {
   </div>
   </div>
 
-  </div>
+  <!-- Toast container -->
   <div class="toast-container position-fixed top-0 end-0 p-3">
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
         <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
         <strong class="me-auto">Faculty Parcel Management</strong>
-        <!-- <small class="text-body-secondary">just now</small> -->
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
-        Parcels Have Arrived
-      </div>
-    </div>
-
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header">
-        <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
-        <strong class="me-auto">Faculty Parcel Management</strong>
-        <!-- <small class="text-body-secondary">2 seconds ago</small> -->
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div class="toast-body">
-        Appointment booked
+        <?php echo $toast_message; ?>
       </div>
     </div>
   </div>
 
   <script>
     var toastTrigger = document.getElementById('liveToastBtn');
-    var toasts = document.querySelectorAll('.toast');
+    var toastLive = document.getElementById('liveToast');
 
     if (toastTrigger) {
       toastTrigger.addEventListener('click', function() {
-
-        toasts.forEach(function(toast, index) {
-          var delay = index * 1000; // 1000 milliseconds = 1 seconds
-
-          setTimeout(function() {
-            var bsToast = new bootstrap.Toast(toast);
-            bsToast.show();
-          }, delay);
-        });
+        var toast = new bootstrap.Toast(toastLive);
+        toast.show();
       });
     }
+
+    // Automatically show toast if there is a message
+    <?php if (!empty($toast_message)) : ?>
+      document.addEventListener('DOMContentLoaded', function() {
+        var toast = new bootstrap.Toast(toastLive);
+        //toast.show();
+      });
+    <?php endif; ?>
   </script>
 
 </body>
+
 </html>

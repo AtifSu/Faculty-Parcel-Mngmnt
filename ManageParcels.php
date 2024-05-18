@@ -317,7 +317,6 @@ if (isset($_GET['ParcelID'])) {
       }
 
       // Remove parcel
-      // Remove parcel
       function removeParcel(ParcelID) {
         fetch('ManageParcels.php?ParcelID=' + ParcelID, {
             method: 'GET'
