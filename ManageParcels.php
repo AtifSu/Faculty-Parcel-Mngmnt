@@ -17,6 +17,7 @@ $result = mysqli_query($connect, $sql);
 
 $ParcelID = null;
 
+//Delete parcel
 if (isset($_GET['ParcelID'])) {
   $ParcelID = $_GET['ParcelID'];
 
@@ -66,25 +67,25 @@ if (isset($_GET['ParcelID'])) {
         <!-- Manage Payment -->
         <li class="nav-item">
           <div class="h1">
-            <a class="nav-link bi bi-credit-card active" aria-current="page" href="AdminPayment.php" style="color: #F46E75"></a>
+            <a class="nav-link bi bi-credit-card active" aria-current="page" href="AdminPayment.php"></a>
           </div>
         </li>
         <!-- Parcels -->
         <li class="nav-item">
           <div class="h1">
-            <a class="nav-link bi bi-archive active" style="color: #F46E75" aria-current="page" href="ManageParcels.php"></a>
+            <a class="nav-link bi bi-archive active" aria-current="page" href="ManageParcels.php"></a>
           </div>
         </li>
         <!-- Toast Notification -->
         <li class="nav-item">
           <div class="h1">
-            <button type="button" style="color: #F46E75" class="nav-link bi bi-bell" id="liveToastBtn"></button>
+            <button type="button" class="nav-link bi bi-bell" id="liveToastBtn"></button>
           </div>
         </li>
         <!-- Profile -->
         <li class="nav-item">
           <div class="h1">
-            <a class="nav-link bi bi-person" style="color: #F46E75" href="AdminProfile.php"></a>
+            <a class="nav-link bi bi-person" href="AdminProfile.php"></a>
           </div>
         </li>
       </ul>
@@ -154,6 +155,8 @@ if (isset($_GET['ParcelID'])) {
       }
       ?>
     </div>
+
+    <!-- Toast notifications -->
     <div class="toast-container position-fixed top-0 end-0 p-3">
       <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
@@ -329,10 +332,15 @@ if (isset($_GET['ParcelID'])) {
           })
           .then(data => {
             if (data.success) {
-              alert("Successfully removed the parcel.");
+              const toast = new bootstrap.Toast(document.querySelector('.toast.bg-primary')); // Target success toast
+              toast.show();
+              alert("Successfully updated the parcel.");
               location.reload();
             } else {
-              alert("Failed to remove parcel. " + data.error);
+              const toast = new bootstrap.Toast(document.querySelector('.toast.bg-danger')); // Target removal toast
+              toast.show();
+              alert("Successfully removed the parcel.");
+              location.reload();
             }
           })
           .catch(error => {
@@ -340,7 +348,6 @@ if (isset($_GET['ParcelID'])) {
             alert("Error removing parcel.");
           });
       }
-
 
       // Searching function
       document.addEventListener("DOMContentLoaded", function() {
