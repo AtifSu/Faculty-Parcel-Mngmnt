@@ -19,16 +19,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt = $connect->prepare($sql_update)) {
         $stmt->bind_param("ss", $password, $email);
         if ($stmt->execute()) {
-            echo "<script>alert('Profile updated successfully!');</script>";
+            $_SESSION['update_success'] = "Profile updated successfully!";
             echo "<script>window.location.href = '../AdminProfile.php';</script>";
             exit();
         } else {
-            echo "Error updating profile: " . $stmt->error;
+            $_SESSION['update_error'] = "Error updating profile: " . $stmt->error;
         }
         $stmt->close();
     } else {
-        echo "Error preparing statement: " . $connect->error;
+        $_SESSION['update_error'] = "Error preparing statement: " . $connect->error;
     }
+    header("Location: ../AdminProfile.php");
 }
 
 $connect->close();

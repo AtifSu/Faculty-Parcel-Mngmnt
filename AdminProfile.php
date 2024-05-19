@@ -121,37 +121,53 @@ if (isset($_SESSION['AdminID'])) {
     </div>
   </div>
 
-  <div class="toast-container position-fixed top-0 end-0 p-3">
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header">
-        <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
-        <strong class="me-auto">Faculty Parcel Management</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div class="toast-body">
-        Parcels Have Arrived
-      </div>
-    </div>
-
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header">
-        <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
-        <strong class="me-auto">Faculty Parcel Management</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div class="toast-body">
-        Appointment booked
-      </div>
+  <!-- Toast Notifications -->
+  <div aria-live="polite" aria-atomic="true" class="position-relative">
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+      <?php
+      if (isset($_SESSION['update_success'])) {
+        echo '<div class="toast-container position-fixed top-0 end-0 p-3">
+                      <div class="toast align-items-center text-bg border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                          <div class="toast-header">
+                              <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
+                              <strong class="me-auto">Faculty Parcel Management</strong>
+                              <button type="button" class="btn-close btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                          </div>
+                          <div class="toast-body">' . $_SESSION['update_success'] . '</div>
+                      </div>
+                    </div>';
+      }
+      if (isset($_SESSION['update_error'])) {
+        echo '<div class="toast-container position-fixed top-0 end-0 p-3">
+                    <div class="toast align-items-center text-bg border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                        <div class="toast-header">
+                            <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
+                            <strong class="me-auto">Faculty Parcel Management</strong>
+                            <button type="button" class="btn-close btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">' . $_SESSION['update_error'] . '</div>
+                    </div>
+                  </div>';
+      }
+      ?>
     </div>
   </div>
 
   <script>
-    // Toast Notifications Function
-    var toastTrigger = document.getElementById('liveToastBtn');
-    var toasts = document.querySelectorAll('.toast');
+    // Automatically show toast notifications if they exist
+    document.addEventListener('DOMContentLoaded', function() {
+      var toasts = document.querySelectorAll('.toast');
+      toasts.forEach(function(toast) {
+        var bsToast = new bootstrap.Toast(toast);
+        //bsToast.show();
+      });
+    });
 
+    // Show toast notifications when the bell icon is clicked
+    var toastTrigger = document.getElementById('liveToastBtn');
     if (toastTrigger) {
       toastTrigger.addEventListener('click', function() {
+        var toasts = document.querySelectorAll('.toast');
         toasts.forEach(function(toast, index) {
           var delay = index * 1000; // 1000 milliseconds = 1 second
           setTimeout(function() {
