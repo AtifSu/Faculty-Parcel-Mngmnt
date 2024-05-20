@@ -39,7 +39,7 @@ if (isset($_SESSION['message'])) {
 
 <body>
   <!-- Navigation bar -->
-  <nav class="navbar navbar-expand-lg bg-body-secondary">
+  <nav class="navbar navbar-expand-lg bg-body-secondary" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
     <div class="container-fluid">
       <a class="navbar-brand" href="AdminHome.php">
         <img src="img/logo.png" alt="logo" width="95" height="60">

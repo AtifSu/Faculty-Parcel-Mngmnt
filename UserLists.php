@@ -5,11 +5,11 @@ session_start();
 if (isset($_GET['id'])) {
   $StdID = $_GET['id'];
 
-  $sql = "SELECT StdName, StdID, StdEmail, StdPass FROM Student WHERE StdID = ?";
+  $sql = "SELECT StdName, StdID, StdEmail, StdPass,StdImg FROM Student WHERE StdID = ?";
   $stmt = mysqli_prepare($connect, $sql);
   mysqli_stmt_bind_param($stmt, "s", $StdID);
   mysqli_stmt_execute($stmt);
-  mysqli_stmt_bind_result($stmt, $StdName, $StdID, $StdEmail, $StdPass);
+  mysqli_stmt_bind_result($stmt, $StdName, $StdID, $StdEmail, $StdPass, $StdImg);
   mysqli_stmt_fetch($stmt);
   mysqli_stmt_close($stmt);
 } else {
@@ -54,11 +54,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     mysqli_stmt_close($updateStmt);
 
-    $sql = "SELECT StdName, StdID, StdEmail, StdPass FROM Student WHERE StdID = ?";
+    $sql = "SELECT StdName, StdID, StdEmail, StdPass, StdImg FROM Student WHERE StdID = ?";
     $stmt = mysqli_prepare($connect, $sql);
     mysqli_stmt_bind_param($stmt, "s", $StdID);
     mysqli_stmt_execute($stmt);
-    mysqli_stmt_bind_result($stmt, $StdName, $StdID, $StdEmail, $StdPass);
+    mysqli_stmt_bind_result($stmt, $StdName, $StdID, $StdEmail, $StdPass, $StdImg);
     mysqli_stmt_fetch($stmt);
     mysqli_stmt_close($stmt);
   }
@@ -82,7 +82,7 @@ mysqli_close($connect);
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg bg-body-secondary">
+  <nav class="navbar navbar-expand-lg bg-body-secondary" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
     <div class="container-fluid">
       <a class="navbar-brand" href="AdminHome.php">
         <img src="img/logo.png" alt="logo" width="95" height="60">
@@ -125,7 +125,7 @@ mysqli_close($connect);
       <div class="col col-lg-2">
 
         <div class="card float-end" style="width: 18rem;">
-          <img src="uploads/<?php echo isset($newImageName) ? $newImageName : ''; ?>" alt="Profile Image">
+          <img src="php/uploads/<?php echo htmlspecialchars($StdImg); ?>" alt="Profile Image" class="card-img-top" height="300">
         </div>
       </div>
 
@@ -177,7 +177,6 @@ mysqli_close($connect);
               
             });
           </script>";
-
   }
   ?>
 

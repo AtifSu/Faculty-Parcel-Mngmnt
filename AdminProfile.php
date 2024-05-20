@@ -3,27 +3,32 @@ include('php/connect.php');
 session_start();
 
 if (isset($_SESSION['AdminID'])) {
-  $AdminID = $_SESSION['AdminID'];
+    $AdminID = $_SESSION['AdminID'];
 
-  $sql = "SELECT AdminName, AdminID, AdminEmail FROM FSPAdmin";
-  $result = mysqli_query($connect, $sql);
+    $sql = "SELECT AdminName, AdminID, AdminEmail, AdminImg FROM FSPAdmin WHERE AdminID = ?";
+    $stmt = mysqli_prepare($connect, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $AdminID);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-  if ($result && mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
-      if ($row['AdminID'] == $AdminID) {
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
         $AdminName = $row['AdminName'];
         $AdminID = $row['AdminID'];
         $AdminEmail = $row['AdminEmail'];
-        break;
-      }
+        $AdminImg = $row['AdminImg'];
+    } else {
+        echo "Error: No results found";
+        exit();
     }
-  } else {
-    echo "Error: No results found";
-  }
+
+    mysqli_stmt_close($stmt);
 } else {
-  header("Location: login.html");
-  exit();
+    header("Location: login.html");
+    exit();
 }
+
+mysqli_close($connect);
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +46,7 @@ if (isset($_SESSION['AdminID'])) {
 
 <body>
   <!-- Navigation bar -->
-  <nav class="navbar navbar-expand-lg bg-body-secondary">
+  <nav class="navbar navbar-expand-lg bg-body-secondary" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
     <div class="container-fluid">
       <a class="navbar-brand" href="AdminHome.php">
         <img src="img/logo.png" alt="logo" width="95" height="60">
@@ -78,17 +83,17 @@ if (isset($_SESSION['AdminID'])) {
 
   <!-- Image & Details -->
   <div class="container text-center mt-5">
-    <div class="row justify-content-md-center">
-      <div class="col col-lg-2">
-        <div class="card float-end" style="width: 18rem;">
-          <form action="php/upload.php" method="post" enctype="multipart/form-data">
-            <img src="uploads/<?php echo isset($newImageName) ? $newImageName : ''; ?>" alt="Profile Image">
-            <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" required>
-            <button type="submit" class="btn btn-primary" name="upload">Upload</button>
-            <input type="hidden" name="AdminID" value="<?php echo $_SESSION['AdminID']; ?>">
-          </form>
-        </div>
-      </div>
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-2">
+                <div class="card float-end" style="width: 18rem;">
+                    <form action="php/upload2.php" method="post" enctype="multipart/form-data">
+                        <img src="php/uploads/<?php echo htmlspecialchars($AdminImg); ?>" alt="Profile Image" class="card-img-top" height="300">
+                        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" required>
+                        <button type="submit" class="btn btn-primary" name="upload">Upload</button>
+                        <input type="hidden" name="StdID" value="<?php echo htmlspecialchars($AdminImg); ?>">
+                    </form>
+                </div>
+            </div>
 
       <div class="col-md-auto">
 

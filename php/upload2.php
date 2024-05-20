@@ -4,8 +4,8 @@ session_start();
 
 if (isset($_POST['upload'])) {
 
-    if (isset($_SESSION['StdID'])) {
-        $StdID = $_SESSION['StdID'];
+    if (isset($_SESSION['AdminID'])) {
+        $AdminID = $_SESSION['AdminID'];
 
         // Handle image upload
         if ($_FILES["image"]["error"] === 4) {
@@ -33,14 +33,14 @@ if (isset($_POST['upload'])) {
 
                 move_uploaded_file($tmpName, 'uploads/' . $newImageName);
 
-                $sql = "UPDATE Student SET StdImg = ? WHERE StdID = ?";
+                $sql = "UPDATE FSPAdmin SET AdminImg = ? WHERE AdminID = ?";
                 $stmt = mysqli_prepare($connect, $sql);
                 if ($stmt) {
-                    mysqli_stmt_bind_param($stmt, "si", $newImageName, $StdID);
+                    mysqli_stmt_bind_param($stmt, "si", $newImageName, $AdminID);
                     $result = mysqli_stmt_execute($stmt);
 
                     if ($result) {
-                        echo "<script>alert('Profile picture updated!'); window.location='../StdProfile.php';</script>";
+                        echo "<script>alert('Profile picture updated!'); window.location='../AdminProfile.php';</script>";
                     } else {
                         echo "<script>alert('Error updating database: " . htmlspecialchars(mysqli_error($connect)) . "');</script>";
                     }
@@ -52,7 +52,7 @@ if (isset($_POST['upload'])) {
             }
         }
     } else {
-        echo "<script>alert('Session data unavailable. Please login and try again.'); window.location='../StdProfile.php';</script>";
+        echo "<script>alert('Session data unavailable. Please login and try again.'); window.location='../AdminProfile.php';</script>";
     }
 }
 mysqli_close($connect);

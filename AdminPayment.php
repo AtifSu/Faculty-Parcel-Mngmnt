@@ -36,6 +36,9 @@ $toast_message = isset($_SESSION['toast_message']) ? $_SESSION['toast_message'] 
 $toast_type = isset($_SESSION['toast_type']) ? $_SESSION['toast_type'] : '';
 unset($_SESSION['toast_message']);
 unset($_SESSION['toast_type']);
+
+$uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image'] : '';
+
 ?>
 
 <!DOCTYPE html>
@@ -53,7 +56,7 @@ unset($_SESSION['toast_type']);
 
 <body>
   <!-- Navigation bar -->
-  <nav class="navbar navbar-expand-lg bg-body-secondary">
+  <nav class="navbar navbar-expand-lg bg-body-secondary" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
     <div class="container-fluid">
       <a class="navbar-brand" href="AdminHome.php">
         <img src="img/logo.png" alt="logo" width="95" height="60">
@@ -93,15 +96,19 @@ unset($_SESSION['toast_type']);
       <div class="h2 mt-3"> Payment and Appointment </div>
       <form action="payment.php" method="post" enctype="multipart/form-data">
         <div class="card" style="width: 18rem;">
-          <img src="payment/<?php echo isset($newImageName) ? $newImageName : ''; ?>" name="PaymentImg" alt="PaymentImage">
+          <?php if ($uploaded_image): ?>
+            <img src="payment/<?php echo htmlspecialchars($uploaded_image); ?>" alt="Profile Image" class="card-img-top" height="300">
+          <?php else: ?>
+            <img src="default_image_path.jpg" alt="Default Image" class="card-img-top" height="300">
+          <?php endif; ?>
           <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" required>
           <div class="card-body">
             <div class="input-group input-group-sm mb-3">
               <input type="text" class="form-control" aria-describedby="inputGroup-sizing-sm" name="PaymentNumber" placeholder="Account Number">
             </div>
             <div class="input-group input-group-sm mb-3">
-              <input type="text" class="form-control" aria-describedby="inputGroup-sizing-sm" name="PaymentName" placeholder="Bank Name">
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <input type="text" class="form-control" aria-describedby="inputGroup-sizing-sm" name="PaymentBank" placeholder="Bank Name">
+              <button type="submit" name="upload" class="btn btn-primary">Submit</button>
             </div>
           </div>
       </form>

@@ -47,7 +47,7 @@ if (isset($_GET['ParcelID'])) {
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" >
   <title>Manage Parcels</title>
   <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -57,7 +57,7 @@ if (isset($_GET['ParcelID'])) {
 
 <body>
   <!-- Navigation bar -->
-  <nav class="navbar navbar-expand-lg bg-body-secondary">
+  <nav class="navbar navbar-expand-lg bg-body-secondary" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
     <div class="container-fluid">
       <a class="navbar-brand" href="AdminHome.php">
         <img src="img/logo.png" alt="logo" width="95" height="60">
@@ -77,11 +77,11 @@ if (isset($_GET['ParcelID'])) {
           </div>
         </li>
         <!-- Toast Notification -->
-        <!-- <li class="nav-item">
+         <li class="nav-item">
           <div class="h1">
             <button type="button" class="nav-link bi bi-bell" id="liveToastBtn"></button>
           </div>
-        </li> -->
+        </li>
         <!-- Profile -->
         <li class="nav-item">
           <div class="h1">
