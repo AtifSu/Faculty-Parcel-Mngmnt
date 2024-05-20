@@ -77,11 +77,11 @@ if (isset($_GET['ParcelID'])) {
           </div>
         </li>
         <!-- Toast Notification -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <div class="h1">
             <button type="button" class="nav-link bi bi-bell" id="liveToastBtn"></button>
           </div>
-        </li>
+        </li> -->
         <!-- Profile -->
         <li class="nav-item">
           <div class="h1">

@@ -1,6 +1,6 @@
 <?php
-include('php/connect.php'); 
 include ('php/create.php');
+include('php/connect.php'); 
 
 if (isset($_POST['AdminID'])) {
   $AdminName = $_POST["AdminName"];
