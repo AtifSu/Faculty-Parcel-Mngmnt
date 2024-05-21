@@ -2,13 +2,14 @@
 include('php/connect.php');
 session_start();
 
-// Fetch payment details from the database
 $paymentDetails = [];
-$sql = "SELECT PaymentBank, PaymentNumber, PaymentImg FROM Payment";
+$sql = "SELECT PaymentBank, PaymentNumber, PaymentImg FROM Payment ORDER BY PaymentID DESC LIMIT 1";
 $result = mysqli_query($connect, $sql);
 
 if ($result && mysqli_num_rows($result) > 0) {
     $paymentDetails = mysqli_fetch_assoc($result);
+} else {
+    echo "<script>alert('Error: No results found');</script>";
 }
 
 mysqli_close($connect);
@@ -64,7 +65,7 @@ mysqli_close($connect);
         <?php if (!empty($paymentDetails['PaymentImg'])): ?>
           <img src="payment/<?php echo htmlspecialchars($paymentDetails['PaymentImg']); ?>" class="card-img-top" alt="Bank Image">
         <?php else: ?>
-          <img src="img/bank.png" class="card-img-top" alt="Default Bank Image">
+          <img src="img/default.png" class="card-img-top" alt="Default Bank Image">
         <?php endif; ?>
         <div class="card-body">
           <p class="card-text"><strong>Account Number: </strong><?php echo htmlspecialchars($paymentDetails['PaymentNumber']); ?></p>
