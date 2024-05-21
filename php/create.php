@@ -44,8 +44,7 @@ $mysql_query3 = "CREATE TABLE IF NOT EXISTS Parcel (
     StdID VARCHAR(10),
     AdminID VARCHAR(10),
     PRIMARY KEY(ParcelID),
-    FOREIGN KEY(StdID) REFERENCES Student(StdID),
-    FOREIGN KEY(AdminID) REFERENCES FSPAdmin(AdminID)
+    FOREIGN KEY(StdID) REFERENCES Student(StdID)
 )";
 
 $mysql_query4 = "CREATE TABLE IF NOT EXISTS Payment (
@@ -55,9 +54,7 @@ $mysql_query4 = "CREATE TABLE IF NOT EXISTS Payment (
     PaymentBank VARCHAR(20),
     StdID VARCHAR(10),
     AdminID VARCHAR(10),
-    PRIMARY KEY(PaymentID),
-    FOREIGN KEY(StdID) REFERENCES Student(StdID),
-    FOREIGN KEY(AdminID) REFERENCES FSPAdmin(AdminID)
+    PRIMARY KEY(PaymentID)
 )";
 
 $mysql_query5 = "CREATE TABLE IF NOT EXISTS Appointment (
@@ -68,8 +65,7 @@ $mysql_query5 = "CREATE TABLE IF NOT EXISTS Appointment (
   AdminID VARCHAR(10),
   ParcelTrackingNum VARCHAR(50),
   PRIMARY KEY(AppointmentID),
-  FOREIGN KEY(StdID) REFERENCES Student(StdID),
-  FOREIGN KEY(AdminID) REFERENCES FSPAdmin(AdminID)
+  FOREIGN KEY(StdID) REFERENCES Student(StdID)
 )";
 
 

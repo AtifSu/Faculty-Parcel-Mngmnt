@@ -35,9 +35,9 @@ if (isset($_POST['StdID'])) {
     if (!$result) {
         die('Error in executing the statement: ' . mysqli_error($connect));
     }
-
-    echo "<script>alert('Sign Up successful!')</script>";
     echo "<script>window.location='login.html'</script>";
+    echo "<script>alert('Sign Up successful!')</script>";
+
 
     mysqli_stmt_close($stmt);
 }
