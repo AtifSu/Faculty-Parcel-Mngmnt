@@ -3,11 +3,9 @@ include('connect.php');
 session_start();
 
 if (isset($_POST['upload'])) {
-
     if (isset($_SESSION['StdID'])) {
         $StdID = $_SESSION['StdID'];
 
-        // Handle image upload
         if ($_FILES["image"]["error"] === 4) {
             echo "<script>alert('Image does not exist');</script>";
         } else {
@@ -36,7 +34,7 @@ if (isset($_POST['upload'])) {
                 $sql = "UPDATE Student SET StdImg = ? WHERE StdID = ?";
                 $stmt = mysqli_prepare($connect, $sql);
                 if ($stmt) {
-                    mysqli_stmt_bind_param($stmt, "si", $newImageName, $StdID);
+                    mysqli_stmt_bind_param($stmt, "ss", $newImageName, $StdID);  // Use "ss" since StdID is a string
                     $result = mysqli_stmt_execute($stmt);
 
                     if ($result) {
