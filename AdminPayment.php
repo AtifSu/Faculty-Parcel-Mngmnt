@@ -25,10 +25,10 @@ if (isset($_POST['delete_appointment']) && isset($_POST['StdID'])) {
 // Handle search functionality
 if (isset($_POST['search'])) {
   $searchTerm = mysqli_real_escape_string($connect, $_POST['search']);
-  $sql = "SELECT StdID, AppointmentDate, AppointmentTime FROM Appointment WHERE StdID LIKE '%$searchTerm%' OR AppointmentDate LIKE '%$searchTerm%'";
+  $sql = "SELECT StdID, AppointmentDate, AppointmentTime, ParcelTrackingNum FROM Appointment WHERE StdID LIKE '%$searchTerm%' OR AppointmentDate LIKE '%$searchTerm%'";
   $result = mysqli_query($connect, $sql);
 } else {
-  $sql = "SELECT StdID, AppointmentDate, AppointmentTime FROM Appointment";
+  $sql = "SELECT StdID, AppointmentDate, AppointmentTime, ParcelTrackingNum FROM Appointment";
   $result = mysqli_query($connect, $sql);
 }
 
@@ -137,10 +137,11 @@ $uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image
                   <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return confirm('Are you sure you want to delete this appointment?');">
                     <input type="hidden" name="StdID" value="<?php echo $row['StdID']; ?>">
                     <button type="submit" class="btn-close float-end" name="delete_appointment"></button>
-                    <h5 class="card-title">Appointment Details</h5>
+                    <h5 class="card-title"><strong>Appointment Details</strong></h5>
                     <p class="card-text">Matrics ID: <strong><?php echo $row["StdID"]; ?></strong></p>
                     <p class="card-text">Appointment Date: <strong><?php echo $row["AppointmentDate"]; ?></strong></p>
                     <p class="card-text">Appointment Time: <strong><?php echo $row["AppointmentTime"]; ?></strong></p>
+                    <p class="card-text">Tracking Number: <strong><?php echo $row["ParcelTrackingNum"]; ?></strong></p>
                   </form>
                 </div>
               </div>

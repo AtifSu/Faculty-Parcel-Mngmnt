@@ -2,23 +2,27 @@
 session_start();
 include('php/connect.php');
 
-if (isset($_SESSION['StdID'])) {
-    $StdID = $_SESSION['StdID'];
+if (!isset($_SESSION['StdID'])) {
 
-    $sql = "SELECT StdName, StdID, StdEmail, StdImg FROM Student WHERE StdID = '$StdID'";
-    $result = mysqli_query($connect, $sql);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        $StdName = $row['StdName'];
-        $StdID = $row['StdID'];
-        $StdEmail = $row['StdEmail'];
-        $StdImg = $row['StdImg'];
-    } else {
-        echo "<script>alert('Error: No results found');</script>";
-        exit();
-    }
+  header("Location: login.html");
+  exit(); 
 }
+
+$StdID = $_SESSION['StdID'];
+$sql = "SELECT StdName, StdID, StdEmail, StdImg FROM Student WHERE StdID = '$StdID'";
+$result = mysqli_query($connect, $sql);
+
+if ($result && mysqli_num_rows($result) > 0) {
+  $row = mysqli_fetch_assoc($result);
+  $StdName = $row['StdName'];
+  $StdID = $row['StdID'];
+  $StdEmail = $row['StdEmail'];
+  $StdImg = $row['StdImg'];
+} else {
+  echo "<script>alert('Error: No results found');</script>";
+  exit();
+}
+
 mysqli_close($connect);
 ?>
 

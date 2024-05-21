@@ -2,25 +2,30 @@
 session_start();
 include('php/connect.php');
 
-if (isset($_SESSION['AdminID'])) {
-  $AdminID = $_SESSION['AdminID'];
+if (!isset($_SESSION['AdminID'])) {
 
-  $sql = "SELECT AdminName, AdminID, AdminEmail, AdminImg FROM FSPAdmin WHERE AdminID = '$AdminID'";
-  $result = mysqli_query($connect, $sql);
-
-  if ($result && mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_assoc($result);
-    $AdminName = $row['AdminName'];
-    $AdminID = $row['AdminID'];
-    $AdminEmail = $row['AdminEmail'];
-    $AdminImg = $row['AdminImg'];
-  } else {
-    echo "<script>alert('Error: No results found');</script>";
-    exit();
-  }
+  header("Location: login.html");
+  exit(); 
 }
+
+$AdminID = $_SESSION['AdminID'];
+$sql = "SELECT AdminName, AdminID, AdminEmail, AdminImg FROM FSPAdmin WHERE AdminID = '$AdminID'";
+$result = mysqli_query($connect, $sql);
+
+if ($result && mysqli_num_rows($result) > 0) {
+  $row = mysqli_fetch_assoc($result);
+  $AdminName = $row['AdminName'];
+  $AdminID = $row['AdminID'];
+  $AdminEmail = $row['AdminEmail'];
+  $AdminImg = $row['AdminImg'];
+} else {
+  echo "<script>alert('Error: No results found');</script>";
+  exit();
+}
+
 mysqli_close($connect);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
