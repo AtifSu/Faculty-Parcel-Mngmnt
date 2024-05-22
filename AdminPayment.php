@@ -50,6 +50,7 @@ $uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image
   <title>Manage Payment</title>
   <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="custom.css">
+  <link rel="icon" href="img/logo.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <script src="js/bootstrap.bundle.js"></script>
 </head>
