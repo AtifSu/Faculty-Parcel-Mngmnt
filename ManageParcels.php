@@ -20,14 +20,13 @@ $ParcelID = null;
 //Delete parcel
 if (isset($_GET['ParcelID'])) {
   $ParcelID = $_GET['ParcelID'];
-
   $sql = "DELETE FROM Parcel WHERE ParcelID = ?";
   $stmt = mysqli_prepare($connect, $sql);
-
   mysqli_stmt_bind_param($stmt, "i", $ParcelID);
 
   if (mysqli_stmt_execute($stmt)) {
     if (mysqli_stmt_affected_rows($stmt) > 0) {
+      $_SESSION['toast_success'] = true; // Set session variable
       echo json_encode(array("success" => true));
     } else {
       echo json_encode(array("success" => false, "error" => "No parcel found with the specified ID."));
@@ -47,7 +46,7 @@ if (isset($_GET['ParcelID'])) {
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manage Parcels</title>
   <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -77,7 +76,7 @@ if (isset($_GET['ParcelID'])) {
           </div>
         </li>
         <!-- Toast Notification -->
-         <li class="nav-item">
+        <li class="nav-item">
           <div class="h1">
             <button type="button" class="nav-link bi bi-bell" id="liveToastBtn"></button>
           </div>
@@ -158,232 +157,238 @@ if (isset($_GET['ParcelID'])) {
 
     <!-- Toast notifications -->
     <div class="toast-container position-fixed top-0 end-0 p-3">
-      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div id="toast-yes" class="toast text-black" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
         <div class="toast-header">
           <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
           <strong class="me-auto">Faculty Parcel Management</strong>
-          <!-- <small class="text-body-secondary">just now</small> -->
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">
-          Parcels Have Arrived
+          Parcel successfully deleted.
         </div>
       </div>
 
-      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div id="toast-yes2" class="toast text-black" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
         <div class="toast-header">
           <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
           <strong class="me-auto">Faculty Parcel Management</strong>
-          <!-- <small class="text-body-secondary">2 seconds ago</small> -->
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">
-          Appointment booked
+          Parcel Edited Successfully.
         </div>
       </div>
-    </div>
 
-    <!-- Add parcel modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Parcel</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Form -->
-            <form action="addparcel.php" method="post">
-              <div class="row g-3 align-items-center">
-                <div class="col">
-                  <div class="row">
-                    <div class="col-auto">
-                      <label for="ParcelTrackingNum" class="col-form-label">Tracking Number</label>
+      <div id="toast-error" class="toast text-black" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+        <div class="toast-header">
+          <img src="img/logo.png" class="rounded me-2" width="30" height="20" alt="">
+          <strong class="me-auto">Faculty Parcel Management</strong>
+          <button type="button" class="btn-close btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          Error updating/deleting parcel.
+        </div>
+      </div>
+
+      <!-- Add parcel modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Add Parcel</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Form -->
+              <form action="addparcel.php" method="post">
+                <div class="row g-3 align-items-center">
+                  <div class="col">
+                    <div class="row">
+                      <div class="col-auto">
+                        <label for="ParcelTrackingNum" class="col-form-label">Tracking Number</label>
+                      </div>
+                      <div class="col-auto">
+                        <input type="text" id="ParcelTrackingNum" name="ParcelTrackingNum" class="form-control">
+                      </div>
                     </div>
-                    <div class="col-auto">
-                      <input type="text" id="ParcelTrackingNum" name="ParcelTrackingNum" class="form-control">
+                    <div class="row mt-1">
+                      <div class="col-auto">
+                        <label for="ParcelCourier" class="col-form-label">Courier</label>
+                      </div>
+                      <div class="col-auto ms-5">
+                        <input type="text" id="ParcelCourier" name="ParcelCourier" class="form-control">
+                      </div>
                     </div>
-                  </div>
-                  <div class="row mt-1">
-                    <div class="col-auto">
-                      <label for="ParcelCourier" class="col-form-label">Courier</label>
+                    <div class="row mt-1">
+                      <div class="col-auto">
+                        <label for="ParcelStatus" class="col-form-label">Status</label>
+                      </div>
+                      <div class="col-auto ms-5">
+                        <input type="text" id="ParcelStatus" name="ParcelStatus" class="form-control">
+                      </div>
                     </div>
-                    <div class="col-auto ms-5">
-                      <input type="text" id="ParcelCourier" name="ParcelCourier" class="form-control">
+                    <div class="row mt-1">
+                      <div class="col-auto">
+                        <label for="ParcelArriveDate" class="col-form-label">Arrived Date</label>
+                      </div>
+                      <div class="col-auto ms-1">
+                        <input type="date" id="ParcelArriveDate" name="ParcelArriveDate" class="form-control">
+                      </div>
                     </div>
-                  </div>
-                  <div class="row mt-1">
-                    <div class="col-auto">
-                      <label for="ParcelStatus" class="col-form-label">Status</label>
-                    </div>
-                    <div class="col-auto ms-5">
-                      <input type="text" id="ParcelStatus" name="ParcelStatus" class="form-control">
-                    </div>
-                  </div>
-                  <div class="row mt-1">
-                    <div class="col-auto">
-                      <label for="ParcelArriveDate" class="col-form-label">Arrived Date</label>
-                    </div>
-                    <div class="col-auto ms-1">
-                      <input type="date" id="ParcelArriveDate" name="ParcelArriveDate" class="form-control">
-                    </div>
-                  </div>
-                  <div class="row mt-1">
-                    <div class="col-auto">
-                      <label for="StdID" class="col-form-label">Matrics ID</label>
-                    </div>
-                    <div class="col-auto ms-3">
-                      <input type="text" id="StdID" name="StdID" class="form-control">
+                    <div class="row mt-1">
+                      <div class="col-auto">
+                        <label for="StdID" class="col-form-label">Matrics ID</label>
+                      </div>
+                      <div class="col-auto ms-3">
+                        <input type="text" id="StdID" name="StdID" class="form-control">
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="modal-footer mt-5">
-                <button type="submit" class="btn btn-primary">Save changes</button>
-              </div>
-            </form>
+                <div class="modal-footer mt-5">
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Edit parcel modal -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="editModalLabel">Edit Parcel</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Edit Form -->
-            <form id="editParcelForm">
-              <input type="hidden" id="editParcelID" name="ParcelID">
-              <div class="row g-3 align-items-center">
-                <div class="col">
-                  <div class="row">
-                    <div class="col-auto">
-                      <label for="editParcelStatus" class="col-form-label">Status</label>
-                    </div>
-                    <div class="col-auto ms-5">
-                      <input type="text" id="editParcelStatus" name="ParcelStatus" class="form-control">
+      <!-- Edit parcel modal -->
+      <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="editModalLabel">Edit Parcel</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Edit Form -->
+              <form id="editParcelForm">
+                <input type="hidden" id="editParcelID" name="ParcelID">
+                <div class="row g-3 align-items-center">
+                  <div class="col">
+                    <div class="row">
+                      <div class="col-auto">
+                        <label for="editParcelStatus" class="col-form-label">Status</label>
+                      </div>
+                      <div class="col-auto ms-5">
+                        <input type="text" id="editParcelStatus" name="ParcelStatus" class="form-control">
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="modal-footer mt-5">
-                <button type="button" class="btn btn-primary" onclick="updateParcel()">Save changes</button>
-              </div>
-            </form>
+                <div class="modal-footer mt-5">
+                  <button type="button" class="btn btn-primary" onclick="updateParcel()">Save changes</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <script>
-      // Handle edit button click
-      var editModal = document.getElementById('editModal');
-      editModal.addEventListener('show.bs.modal', function(event) {
-        var button = event.relatedTarget;
-        var parcelID = button.getAttribute('data-parcel-id');
-        var parcelStatus = button.getAttribute('data-parcel-status');
+      <script>
+        // Handle edit button click
+        var editModal = document.getElementById('editModal');
+        editModal.addEventListener('show.bs.modal', function(event) {
+          var button = event.relatedTarget;
+          var parcelID = button.getAttribute('data-parcel-id');
+          var parcelStatus = button.getAttribute('data-parcel-status');
 
-        var modalParcelID = editModal.querySelector('#editParcelID');
-        var modalParcelStatus = editModal.querySelector('#editParcelStatus');
+          var modalParcelID = editModal.querySelector('#editParcelID');
+          var modalParcelStatus = editModal.querySelector('#editParcelStatus');
 
-        modalParcelID.value = parcelID;
-        modalParcelStatus.value = parcelStatus;
-      });
+          modalParcelID.value = parcelID;
+          modalParcelStatus.value = parcelStatus;
+        });
 
-      // Update parcel status
-      function updateParcel() {
-        var form = document.getElementById('editParcelForm');
-        var formData = new FormData(form);
+        // Update parcel status
+        function updateParcel() {
+          var form = document.getElementById('editParcelForm');
+          var formData = new FormData(form);
 
-        fetch('edit_parcel.php', {
-            method: 'POST',
-            body: formData
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              alert("Successfully updated the parcel.");
-              location.reload();
-            } else {
-              alert("Failed to update parcel. The server responded with an error.");
-            }
-          })
-          .catch(error => {
-            console.error("Error:", error);
-            alert("Error updating parcel.");
-          });
-      }
-
-      // Remove parcel
-      function removeParcel(ParcelID) {
-        fetch('ManageParcels.php?ParcelID=' + ParcelID, {
-            method: 'GET'
-          })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.json();
-          })
-          .then(data => {
-            if (data.success) {
-              const toast = new bootstrap.Toast(document.querySelector('.toast.bg-primary')); // Target success toast
+          fetch('edit_parcel.php', {
+              method: 'POST',
+              body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                const toast = new bootstrap.Toast(document.getElementById('toast-yes2'));
+                toast.show();
+                setTimeout(() => {
+                  location.reload();
+                }, 1500);
+              } else {
+                const toast = new bootstrap.Toast(document.getElementById('toast-error'));
+                toast.show();
+              }
+            })
+            .catch(error => {
+              console.error("Error:", error);
+              const toast = new bootstrap.Toast(document.getElementById('toast-error'));
               toast.show();
-              alert("Successfully updated the parcel.");
-              location.reload();
-            } else {
-              const toast = new bootstrap.Toast(document.querySelector('.toast.bg-danger')); // Target removal toast
+            });
+        }
+
+
+        // Remove parcel
+        function removeParcel(ParcelID) {
+          fetch('ManageParcels.php?ParcelID=' + ParcelID, {
+              method: 'GET'
+            })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then(data => {
+              if (data.success) {
+                const toast = new bootstrap.Toast(document.getElementById('toast-yes'));
+                toast.show();
+                setTimeout(() => {
+                  location.reload();
+                }, 1500);
+              } else {
+                const toast = new bootstrap.Toast(document.getElementById('toast-error'));
+                toast.show();
+              }
+            })
+            .catch(error => {
+              console.error("Error:", error);
+              const toast = new bootstrap.Toast(document.getElementById('toast-error'));
               toast.show();
-              alert("Successfully removed the parcel.");
-              location.reload();
-            }
-          })
-          .catch(error => {
-            console.error("Error:", error);
-            alert("Error removing parcel.");
-          });
-      }
+            });
+        }
 
-      // Searching function
-      document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById("searchBtn").addEventListener("click", function() {
-          const searchValue = document.getElementById("searchInput").value.toLowerCase();
-          const parcelCards = document.getElementById("parcelCards");
-          const cards = parcelCards.querySelectorAll(".card");
+        // Searching function
+        document.addEventListener("DOMContentLoaded", function() {
+          document.getElementById("searchBtn").addEventListener("click", function() {
+            const searchValue = document.getElementById("searchInput").value.toLowerCase();
+            const parcelCards = document.getElementById("parcelCards");
+            const cards = parcelCards.querySelectorAll(".card");
 
-          cards.forEach(card => {
-            const text = card.innerText.toLowerCase();
-            if (text.includes(searchValue)) {
-              card.style.display = "block";
-            } else {
-              card.style.display = "none";
-            }
+            cards.forEach(card => {
+              const text = card.innerText.toLowerCase();
+              if (text.includes(searchValue)) {
+                card.style.display = "block";
+              } else {
+                card.style.display = "none";
+              }
+            });
           });
         });
-      });
 
-      // Toast notification
-      var toastTrigger = document.getElementById('liveToastBtn');
-      var toasts = document.querySelectorAll('.toast');
-
-      if (toastTrigger) {
-        toastTrigger.addEventListener('click', function() {
-          toasts.forEach(function(toast, index) {
-            var delay = index * 1000; // 1000 milliseconds = 1 second
-
-            setTimeout(function() {
-              var bsToast = new bootstrap.Toast(toast);
-              bsToast.show();
-            }, delay);
+        // Toast notification for bell icon
+        var toastTrigger = document.getElementById('liveToastBtn');
+        if (toastTrigger) {
+          toastTrigger.addEventListener('click', function() {
+            const toast = new bootstrap.Toast(document.getElementById('toast-info'));
+            toast.show();
           });
-        });
-      }
-    </script>
+        }
+      </script>
 </body>
 
 </html>

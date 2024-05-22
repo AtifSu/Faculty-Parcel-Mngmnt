@@ -119,12 +119,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   </div>
 
   <script>
-    // Automatically show toast notifications if they exist
+    // Show the information once user logged in
     document.addEventListener('DOMContentLoaded', function() {
       var toasts = document.querySelectorAll('.toast');
       toasts.forEach(function(toast) {
         var bsToast = new bootstrap.Toast(toast);
-        //bsToast.show();
+        bsToast.show();
       });
     });
 
