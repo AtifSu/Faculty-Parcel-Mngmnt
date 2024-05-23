@@ -116,7 +116,7 @@ mysqli_close($connect);
         <div class="h2 float-end">
           <a class="icon-link" href="php/logout.php">
             Logout
-            <a class="bi bi-box-arrow-right" aria-hidden="true" href="php/logout.php"></a>
+            <a class="bi bi-box-arrow-right ms-2" aria-hidden="true" href="php/logout.php"></a>
           </a>
         </div>
       </div>
