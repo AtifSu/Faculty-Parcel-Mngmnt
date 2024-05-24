@@ -34,7 +34,8 @@ if (isset($_SESSION['message'])) {
   <link rel="stylesheet" href="custom.css">
   <link rel="icon" href="img/logo.png">
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
   <script src="js/bootstrap.bundle.js"></script>
 </head>
 
@@ -106,7 +107,7 @@ if (isset($_SESSION['message'])) {
         $col_count++;
 
         echo "  <div class='col'>";
-        echo "    <a class'no-decoration' href='UserLists.php?id=" . $row["StdID"] . "'>";
+        echo "    <a class='no-decoration' href='UserLists.php?id=" . $row["StdID"] . "'>";
         echo "      <div class='card mb-3' style='width: 18rem;'> ";
         echo "        <ul class='list-group list-group-flush'>";
         echo "          <li class='list-group-item'>" . $row["StdName"] . "</li>";
@@ -156,10 +157,8 @@ if (isset($_SESSION['message'])) {
 
     if (toastTrigger) {
       toastTrigger.addEventListener('click', function() {
-
         toasts.forEach(function(toast, index) {
-          var delay = index * 1000; // 1000 milliseconds = 1 seconds
-
+          var delay = index * 1000; // 1000 milliseconds = 1 second
           setTimeout(function() {
             var bsToast = new bootstrap.Toast(toast);
             bsToast.show();
@@ -167,6 +166,17 @@ if (isset($_SESSION['message'])) {
         });
       });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var toast = new bootstrap.Toast(document.getElementById('liveToast'));
+
+      // Check if a new appointment is added and show the toast notification
+      <?php if (isset($_SESSION['new_appointment_added']) && $_SESSION['new_appointment_added'] === true) : ?>
+        toast.show();
+        <?php unset($_SESSION['new_appointment_added']); // unset the session variable after displaying the toast 
+        ?>
+      <?php endif; ?>
+    });
   </script>
 
 </body>

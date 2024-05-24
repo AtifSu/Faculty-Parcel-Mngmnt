@@ -42,7 +42,6 @@ $mysql_query3 = "CREATE TABLE IF NOT EXISTS Parcel (
     ParcelStatus VARCHAR(50),
     ParcelArriveDate DATE,
     StdID VARCHAR(10),
-    AdminID VARCHAR(10),
     PRIMARY KEY(ParcelID),
     FOREIGN KEY(StdID) REFERENCES Student(StdID)
 )";
@@ -51,9 +50,8 @@ $mysql_query4 = "CREATE TABLE IF NOT EXISTS Payment (
     PaymentID INT AUTO_INCREMENT,
     PaymentNumber VARCHAR(50),
     PaymentImg VARBINARY(256),
+    PaymentReceipt VARBINARY(256),
     PaymentBank VARCHAR(20),
-    StdID VARCHAR(10),
-    AdminID VARCHAR(10),
     PRIMARY KEY(PaymentID)
 )";
 
@@ -62,8 +60,8 @@ $mysql_query5 = "CREATE TABLE IF NOT EXISTS Appointment (
   AppointmentDate DATE,
   AppointmentTime VARCHAR(10),
   StdID VARCHAR(10),
-  AdminID VARCHAR(10),
   ParcelTrackingNum VARCHAR(50),
+  PaymentReceipt VARBINARY(256),
   PRIMARY KEY(AppointmentID),
   FOREIGN KEY(StdID) REFERENCES Student(StdID)
 )";
