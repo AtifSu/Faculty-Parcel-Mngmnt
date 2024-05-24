@@ -25,10 +25,10 @@ if (isset($_POST['delete_appointment']) && isset($_POST['StdID'])) {
 // Handle search functionality
 if (isset($_POST['search'])) {
   $searchTerm = mysqli_real_escape_string($connect, $_POST['search']);
-  $sql = "SELECT StdID, AppointmentDate, AppointmentTime, ParcelTrackingNum FROM Appointment WHERE StdID LIKE '%$searchTerm%' OR AppointmentDate LIKE '%$searchTerm%'";
+  $sql = "SELECT StdID, AppointmentDate, AppointmentTime, GROUP_CONCAT(ParcelTrackingNum SEPARATOR ', ') AS ParcelTrackingNum FROM Appointment WHERE StdID LIKE '%$searchTerm%' OR AppointmentDate LIKE '%$searchTerm%' GROUP BY StdID, AppointmentDate, AppointmentTime";
   $result = mysqli_query($connect, $sql);
 } else {
-  $sql = "SELECT StdID, AppointmentDate, AppointmentTime, ParcelTrackingNum FROM Appointment";
+  $sql = "SELECT StdID, AppointmentDate, AppointmentTime, GROUP_CONCAT(ParcelTrackingNum SEPARATOR ', ') AS ParcelTrackingNum FROM Appointment GROUP BY StdID, AppointmentDate, AppointmentTime";
   $result = mysqli_query($connect, $sql);
 }
 
@@ -97,9 +97,9 @@ $uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image
       <div class="h2 mt-3"> Payment and Appointment </div>
       <form action="payment.php" method="post" enctype="multipart/form-data">
         <div class="card" style="width: 18rem;">
-          <?php if ($uploaded_image): ?>
+          <?php if ($uploaded_image) : ?>
             <img src="payment/<?php echo htmlspecialchars($uploaded_image); ?>" alt="Profile Image" class="card-img-top" height="300">
-          <?php else: ?>
+          <?php else : ?>
             <img src="default_image_path.jpg" alt="Default Image" class="card-img-top" height="300">
           <?php endif; ?>
           <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" required>
@@ -135,14 +135,14 @@ $uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image
           ?>
               <div class="card my-3">
                 <div class="card-body">
-                  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return confirm('Are you sure you want to delete this appointment?');">
+                  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return confirm('Are you sure you want to delete this appointment?');');">
                     <input type="hidden" name="StdID" value="<?php echo $row['StdID']; ?>">
                     <button type="submit" class="btn-close float-end" name="delete_appointment"></button>
                     <h5 class="card-title"><strong>Appointment Details</strong></h5>
                     <p class="card-text">Matrics ID: <strong><?php echo $row["StdID"]; ?></strong></p>
                     <p class="card-text">Appointment Date: <strong><?php echo $row["AppointmentDate"]; ?></strong></p>
                     <p class="card-text">Appointment Time: <strong><?php echo $row["AppointmentTime"]; ?></strong></p>
-                    <p class="card-text">Tracking Number: <strong><?php echo $row["ParcelTrackingNum"]; ?></strong></p>
+                    <p class="card-text">Tracking Numbers: <strong><?php echo $row["ParcelTrackingNum"]; ?></strong></p>
                   </form>
                 </div>
               </div>
@@ -154,9 +154,9 @@ $uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image
           ?>
       </form>
     </div>
-  </div>
-  </div>
 
+  </div>
+  </div>
   <!-- Toast container -->
   <div class="toast-container position-fixed top-0 end-0 p-3">
     <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -170,7 +170,6 @@ $uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image
       </div>
     </div>
   </div>
-
   <script>
     var toastTrigger = document.getElementById('liveToastBtn');
     var toastLive = document.getElementById('liveToast');
@@ -190,7 +189,6 @@ $uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image
       });
     <?php endif; ?>
   </script>
-
 </body>
 
 </html>
