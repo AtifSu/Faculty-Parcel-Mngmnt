@@ -2,7 +2,12 @@
 include('php/connect.php');
 session_start();
 
+// Fetch the student ID from the session
+$stdID = isset($_SESSION['StdID']) ? $_SESSION['StdID'] : null;
 $paymentDetails = [];
+$parcels = [];
+
+// Fetch the latest payment details
 $sql = "SELECT PaymentBank, PaymentNumber, PaymentImg FROM Payment ORDER BY PaymentID DESC LIMIT 1";
 $result = mysqli_query($connect, $sql);
 
@@ -10,6 +15,17 @@ if ($result && mysqli_num_rows($result) > 0) {
     $paymentDetails = mysqli_fetch_assoc($result);
 } else {
     echo "<script>alert('Error: No results found');</script>";
+}
+
+// Fetch the parcels associated with the student ID
+if ($stdID) {
+    $parcelQuery = "SELECT ParcelTrackingNum FROM Parcel WHERE StdID = '$stdID'";
+    $parcelResult = mysqli_query($connect, $parcelQuery);
+    if ($parcelResult && mysqli_num_rows($parcelResult) > 0) {
+        while ($row = mysqli_fetch_assoc($parcelResult)) {
+            $parcels[] = $row['ParcelTrackingNum'];
+        }
+    }
 }
 
 mysqli_close($connect);
@@ -80,32 +96,30 @@ mysqli_close($connect);
         <form action="appointment.php" method="post">
           <div class="mb-3 row">
             <h2 class="text-center">Appointment</h2>
-            <label type="text" class="form-label">Date</label>
+            <label for="AppointmentDate" class="form-label">Date</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="AppointmentDate" name="AppointmentDate" required>
+              <input type="date" class="form-control" id="AppointmentDate" name="AppointmentDate" required>
             </div>
           </div>
           <div class="mb-3 row">
-            <label type="text" class="form-label">Time</label>
+            <label for="AppointmentTime" class="form-label">Time</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="AppointmentTime" name="AppointmentTime" required>
+              <input type="time" class="form-control" id="AppointmentTime" name="AppointmentTime" required>
             </div>
           </div>
           <div class="mb-3 row">
-            <label type="text" class="form-label">Matrics ID</label>
+            <label for="ParcelList" class="form-label">Your Parcels</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="StdID" name="StdID" required>
+              <ul class="list-group">
+                <?php foreach ($parcels as $parcel): ?>
+                  <li class="list-group-item"><?php echo htmlspecialchars($parcel); ?></li>
+                <?php endforeach; ?>
+              </ul>
             </div>
           </div>
           <div class="mb-3 row">
-            <label type="text" class="form-label">Tracking Number</label>
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" id="ParcelTrackingNum" name="ParcelTrackingNum" required>
-              <div class="h1 float-end">
-                <button type="submit" class="btn btn-primary">
-                  <span class="first-color bi bi-arrow-right-circle"></span>
-                </button>
-              </div>
+            <div class="col-sm-10">
+              <button type="submit" class="btn btn-primary w-100">Schedule Appointment</button>
             </div>
           </div>
         </form>
@@ -136,8 +150,7 @@ mysqli_close($connect);
                       <strong class="me-auto">Faculty Parcel Management</strong>
                       <button type="button" class="btn-close btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                   </div>
-                  <div class="toast-body">' . $_SESSION['appointment_error'] . '</div>
-              </div>';
+                  <div class="toast-body">' . $_SESSION['appointment_error'] . '</div>';
           unset($_SESSION['appointment_error']);
       }
       ?>
