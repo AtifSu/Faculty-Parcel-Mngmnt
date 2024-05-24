@@ -4,6 +4,7 @@ include('php/connect.php');
 
 $parcelStatus = "";
 $parcelArriveDate = "";
+$parcelNotFound = false;  // Add this flag
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $trackingNumber = isset($_POST['ParcelTrackingNum']) ? $_POST['ParcelTrackingNum'] : '';
@@ -27,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           unset($_SESSION['pickup_notification']);
         }
       } else {
-        echo "<script>alert('No parcel found with the provided tracking number.`');</script>";
+        $parcelNotFound = true;  // Set the flag if no parcel is found
       }
     } else {
       echo 'Database error: ' . mysqli_error($connect);
@@ -115,18 +116,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php echo $_SESSION['pickup_notification']; ?>
           </div>
         </div>
-      <?php unset($_SESSION['pickup_notification']); } ?>
+      <?php unset($_SESSION['pickup_notification']);
+      } ?>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="parcelProcessingModal" tabindex="-1" aria-labelledby="parcelProcessingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="parcelProcessingModalLabel">Parcel Status</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Parcel are still processing and not received at the center yet.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    // Show the information once user logged in
     document.addEventListener('DOMContentLoaded', function() {
+      // Show the toast notifications
       var toasts = document.querySelectorAll('.toast');
       toasts.forEach(function(toast) {
         var bsToast = new bootstrap.Toast(toast);
         bsToast.show();
       });
+
+      // Check if the parcelNotFound flag is set and show the modal if true
+      <?php if ($parcelNotFound) { ?>
+        var parcelProcessingModal = new bootstrap.Modal(document.getElementById('parcelProcessingModal'));
+        parcelProcessingModal.show();
+      <?php } ?>
     });
 
     // Show toast notifications when the bell icon is clicked
