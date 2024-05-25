@@ -37,8 +37,11 @@ $toast_type = isset($_SESSION['toast_type']) ? $_SESSION['toast_type'] : '';
 unset($_SESSION['toast_message']);
 unset($_SESSION['toast_type']);
 
-$uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image'] : '';
+// Check if new appointment was added
+$new_appointment_added = isset($_SESSION['new_appointment_added']) ? $_SESSION['new_appointment_added'] : false;
+unset($_SESSION['new_appointment_added']);
 
+$uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image'] : '';
 ?>
 
 <!DOCTYPE html>
@@ -176,7 +179,13 @@ $uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
-        <?php echo $toast_message; ?>
+        <?php
+        if ($new_appointment_added) {
+          echo "New appointment added successfully.";
+        } else {
+          echo $toast_message;
+        }
+        ?>
       </div>
     </div>
   </div>
@@ -193,10 +202,10 @@ $uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image
     }
 
     // Automatically show toast if there is a message
-    <?php if (!empty($toast_message)) : ?>
+    <?php if ($new_appointment_added || !empty($toast_message)) : ?>
       document.addEventListener('DOMContentLoaded', function() {
         var toast = new bootstrap.Toast(toastLive);
-        //toast.show();
+        toast.show();
       });
     <?php endif; ?>
   </script>

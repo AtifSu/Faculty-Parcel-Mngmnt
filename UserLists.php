@@ -141,10 +141,10 @@ mysqli_close($connect);
         <p><strong>Email:</strong> <?php echo $StdEmail; ?></p>
         <form action="" method="POST">
           <p>
-            <input type="password" class="form-control" id="passwordField" name="StdPass" placeholder="Enter new password">
+            <input type="password" class="form-control" id="passwordField" name="StdPass" placeholder="Enter new password" required>
           </p>
           <p>
-            <input type="email" class="form-control" id="emailField" name="StdEmail" placeholder="Enter new email">
+            <input type="email" class="form-control" id="emailField" name="StdEmail" placeholder="Enter new email" required>
           </p>
           <input type="hidden" name="AdminEmail" value="<?php echo $StdEmail; ?>">
           <br>

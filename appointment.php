@@ -2,6 +2,7 @@
 include('php/connect.php');
 session_start();
 
+// Handle appointment creation
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_SESSION['StdID'])) {
         $stdID = $_SESSION['StdID'];
@@ -41,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-mysqli_close($connect);
-header('Location: StdPayment.php');
+// Redirect to AdminPayment.php
+header('Location: AdminPayment.php');
 exit();
 ?>
