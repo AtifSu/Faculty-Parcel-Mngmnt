@@ -25,10 +25,10 @@ if (isset($_POST['delete_appointment']) && isset($_POST['StdID'])) {
 // Handle search functionality
 if (isset($_POST['search'])) {
   $searchTerm = mysqli_real_escape_string($connect, $_POST['search']);
-  $sql = "SELECT StdID, AppointmentDate, AppointmentTime, ParcelTrackingNum FROM Appointment WHERE StdID LIKE '%$searchTerm%' OR AppointmentDate LIKE '%$searchTerm%'";
+  $sql = "SELECT StdID, AppointmentDate, AppointmentTime, ParcelTrackingNum, PaymentReceipt FROM Appointment WHERE StdID LIKE '%$searchTerm%' OR AppointmentDate LIKE '%$searchTerm%'";
   $result = mysqli_query($connect, $sql);
 } else {
-  $sql = "SELECT StdID, AppointmentDate, AppointmentTime, ParcelTrackingNum FROM Appointment";
+  $sql = "SELECT StdID, AppointmentDate, AppointmentTime, ParcelTrackingNum, PaymentReceipt FROM Appointment";
   $result = mysqli_query($connect, $sql);
 }
 
@@ -97,9 +97,9 @@ $uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image
       <div class="h2 mt-3"> Payment and Appointment </div>
       <form action="payment.php" method="post" enctype="multipart/form-data">
         <div class="card" style="width: 18rem;">
-          <?php if ($uploaded_image): ?>
+          <?php if ($uploaded_image) : ?>
             <img src="payment/<?php echo htmlspecialchars($uploaded_image); ?>" alt="Profile Image" class="card-img-top" height="300">
-          <?php else: ?>
+          <?php else : ?>
             <img src="default_image_path.jpg" alt="Default Image" class="card-img-top" height="300">
           <?php endif; ?>
           <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" required>
@@ -143,6 +143,16 @@ $uploaded_image = isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image
                     <p class="card-text">Appointment Date: <strong><?php echo $row["AppointmentDate"]; ?></strong></p>
                     <p class="card-text">Appointment Time: <strong><?php echo $row["AppointmentTime"]; ?></strong></p>
                     <p class="card-text">Tracking Number: <strong><?php echo $row["ParcelTrackingNum"]; ?></strong></p>
+                    <?php
+                    if (!empty($row['PaymentReceipt'])) {
+                      $imagePath = '' . $row['PaymentReceipt'];
+                      //echo "Receipt Image Path: " . $imagePath . "<br>";
+                      echo "<a href='$imagePath' target='_blank'>View Receipt Image</a><br>";
+                      //echo "Receipt Image: <br><img src='" . $imagePath . "' alt='Payment Receipt' style='max-width: 100%;'><br>";
+                    } else {
+                      echo "<p>No receipt image available.</p>";
+                    }
+                    ?>
                   </form>
                 </div>
               </div>

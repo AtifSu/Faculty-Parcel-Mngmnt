@@ -50,7 +50,6 @@ $mysql_query4 = "CREATE TABLE IF NOT EXISTS Payment (
     PaymentID INT AUTO_INCREMENT,
     PaymentNumber VARCHAR(50),
     PaymentImg VARBINARY(256),
-    PaymentReceipt VARBINARY(256),
     PaymentBank VARCHAR(20),
     PRIMARY KEY(PaymentID)
 )";
@@ -66,12 +65,13 @@ $mysql_query5 = "CREATE TABLE IF NOT EXISTS Appointment (
   FOREIGN KEY(StdID) REFERENCES Student(StdID)
 )";
 
-
-if ($link->query($mysql_query1) === TRUE &&
+if (
+    $link->query($mysql_query1) === TRUE &&
     $link->query($mysql_query2) === TRUE &&
     $link->query($mysql_query3) === TRUE &&
     $link->query($mysql_query4) === TRUE &&
-    $link->query($mysql_query5) === TRUE) {
+    $link->query($mysql_query5) === TRUE 
+) {
     echo "Tables created successfully.<br>";
     echo "<script>window.location.href = 'login.html';</script>";
 } else {
@@ -79,4 +79,3 @@ if ($link->query($mysql_query1) === TRUE &&
 }
 
 $link->close();
-?>
