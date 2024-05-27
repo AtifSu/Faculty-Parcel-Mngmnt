@@ -5,7 +5,6 @@ if (!$connect) {
 }
 
 $mysql_query = "CREATE DATABASE IF NOT EXISTS rc22297";
-
 if ($connect->query($mysql_query) === TRUE) {
     echo "Database created successfully.<br>";
 } else {
@@ -64,13 +63,14 @@ $mysql_query5 = "CREATE TABLE IF NOT EXISTS Appointment (
   FOREIGN KEY(StdID) REFERENCES Student(StdID)
 )";
 
-if (
+$table_creation_success = (
     $connect->query($mysql_query1) === TRUE &&
     $connect->query($mysql_query2) === TRUE &&
     $connect->query($mysql_query3) === TRUE &&
     $connect->query($mysql_query4) === TRUE &&
-    $connect->query($mysql_query5) === TRUE 
-) {
+    $connect->query($mysql_query5) === TRUE
+);
+if ($table_creation_success) {
     echo "Tables created successfully.<br>";
     echo "<script>window.location.href = 'login.html';</script>";
 } else {
