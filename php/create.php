@@ -1,19 +1,18 @@
 <?php
-$link = mysqli_connect("localhost", "root", "");
-
-if (!$link) {
+include('connect.php');
+if (!$connect) {
     die('Could not connect: ' . mysqli_connect_error());
 }
 
-$mysql_query = "CREATE DATABASE IF NOT EXISTS fsp_db";
+$mysql_query = "CREATE DATABASE IF NOT EXISTS rc22297";
 
-if ($link->query($mysql_query) === TRUE) {
+if ($connect->query($mysql_query) === TRUE) {
     echo "Database created successfully.<br>";
 } else {
-    echo "Error creating database: " . $link->error . "<br>";
+    echo "Error creating database: " . $connect->error . "<br>";
 }
 
-mysqli_select_db($link, "fsp_db") or die(mysqli_connect_error());
+mysqli_select_db($connect, "rc22297") or die(mysqli_connect_error());
 
 $mysql_query1 = "CREATE TABLE IF NOT EXISTS Student (
     StdID VARCHAR(10),
@@ -66,16 +65,17 @@ $mysql_query5 = "CREATE TABLE IF NOT EXISTS Appointment (
 )";
 
 if (
-    $link->query($mysql_query1) === TRUE &&
-    $link->query($mysql_query2) === TRUE &&
-    $link->query($mysql_query3) === TRUE &&
-    $link->query($mysql_query4) === TRUE &&
-    $link->query($mysql_query5) === TRUE 
+    $connect->query($mysql_query1) === TRUE &&
+    $connect->query($mysql_query2) === TRUE &&
+    $connect->query($mysql_query3) === TRUE &&
+    $connect->query($mysql_query4) === TRUE &&
+    $connect->query($mysql_query5) === TRUE 
 ) {
     echo "Tables created successfully.<br>";
     echo "<script>window.location.href = 'login.html';</script>";
 } else {
-    echo "Error creating tables: " . $link->error . "<br>";
+    echo "Error creating tables: " . $connect->error . "<br>";
 }
 
-$link->close();
+$connect->close();
+?>
