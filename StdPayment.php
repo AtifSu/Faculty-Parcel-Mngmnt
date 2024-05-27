@@ -75,6 +75,8 @@ mysqli_close($connect);
   <link rel="stylesheet" href="custom.css" />
   <link rel="icon" href="img/logo.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
   <script src="js/bootstrap.bundle.js"></script>
   <title>Payment</title>
 </head>
@@ -111,7 +113,7 @@ mysqli_close($connect);
 
   <!-- Input Text -->
   <div class="row justify-content-center">
-    <div class="col-md-4 ax">
+    <div class="col-md-4 ax justify-content-center">
       <div class="h2 mt-3"> Payment and Appointment </div>
       <div class="card" style="width: 18rem;">
       <div class="h6">
@@ -131,8 +133,8 @@ mysqli_close($connect);
       </div>
     </div>
 
-    <div class="col-4 md mt-5">
-      <div class="card mt-4 ms-5 p-3 w-100">
+    <div class="col-md-4 ax mt-5">
+      <div class="card mt-4  p-3 w-100 ">
         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" enctype="multipart/form-data">
           <div class="mb-3 row">
             <h2 class="text-center">Appointment</h2>
