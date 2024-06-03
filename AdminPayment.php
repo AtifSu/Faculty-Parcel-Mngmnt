@@ -11,7 +11,7 @@ if (isset($_POST['delete_appointment']) && isset($_POST['StdID'])) {
 
   if (mysqli_stmt_execute($stmt)) {
     $_SESSION['toast_message'] = "Appointment deleted successfully.";
-    $_SESSION['toast_type'] = "success"; // Optional: you can set different types of toasts
+    $_SESSION['toast_type'] = "success"; 
   } else {
     $_SESSION['toast_message'] = "Failed to delete appointment: " . mysqli_error($connect);
     $_SESSION['toast_type'] = "danger";
@@ -22,7 +22,7 @@ if (isset($_POST['delete_appointment']) && isset($_POST['StdID'])) {
   exit();
 }
 
-// Handle search functionality
+// Searching function
 if (isset($_POST['search'])) {
   $searchTerm = mysqli_real_escape_string($connect, $_POST['search']);
   $sql = "SELECT StdID, AppointmentDate, AppointmentTime, ParcelTrackingNum, PaymentReceipt FROM Appointment WHERE StdID LIKE '%$searchTerm%' OR AppointmentDate LIKE '%$searchTerm%'";

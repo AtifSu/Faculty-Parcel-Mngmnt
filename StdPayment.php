@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['schedule_appointment']
       if (move_uploaded_file($_FILES["receipt_image"]["tmp_name"], $targetFile)) {
         $appointmentSql = "INSERT INTO Appointment (StdID, AppointmentDate, AppointmentTime, ParcelTrackingNum, PaymentReceipt) VALUES (?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($connect, $appointmentSql);
-        mysqli_stmt_bind_param($stmt, "sssss", $stdID, $appointmentDate, $appointmentTime, $parcels[0], $targetFile); // assuming $parcels[0] as ParcelTrackingNum
+        mysqli_stmt_bind_param($stmt, "sssss", $stdID, $appointmentDate, $appointmentTime, $parcels[0], $targetFile);
 
         if (mysqli_stmt_execute($stmt)) {
           $_SESSION['appointment_success'] = "Appointment scheduled successfully.";

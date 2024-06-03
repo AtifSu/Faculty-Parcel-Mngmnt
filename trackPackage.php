@@ -4,7 +4,7 @@ include('php/connect.php');
 
 $parcelStatus = "";
 $parcelArriveDate = "";
-$parcelNotFound = false;  // Add this flag
+$parcelNotFound = false;  
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $trackingNumber = isset($_POST['ParcelTrackingNum']) ? $_POST['ParcelTrackingNum'] : '';
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           unset($_SESSION['pickup_notification']);
         }
       } else {
-        $parcelNotFound = true;  // Set the flag if no parcel is found
+        $parcelNotFound = true;  
       }
     } else {
       echo 'Database error: ' . mysqli_error($connect);
@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         bsToast.show();
       });
 
-      // Check if the parcelNotFound flag is set and show the modal if true
+      //Modal bootstrap fucntion
       <?php if ($parcelNotFound) { ?>
         var parcelProcessingModal = new bootstrap.Modal(document.getElementById('parcelProcessingModal'));
         parcelProcessingModal.show();
