@@ -52,12 +52,12 @@
             </div>
             </div>
 
-          <div class="mb-3 row">
-            <label type="text" class="form-label">Phone Number</label>
-            <div class="col-sm-10">
-            <input type="text" class="form-control" name="StdPhoneNum" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Enter a valid email address" required>
-            </div>
-            </div>
+            <div class="mb-3 row">
+              <label type="text" class="form-label">Phone Number</label>
+              <div class="col-sm-10">
+                  <input type="text" class="form-control" name="StdPhoneNum" pattern="^\+?\d{10,15}$" title="Enter a valid phone number" required>
+              </div>
+          </div>
 
           <div class="mb-3 row">
             <label type="text" class="form-label">Matrics ID</label>
@@ -66,15 +66,15 @@
             </div>
             </div>
               
-          <div class="mb-3 row">
-            <label type="text" class="form-label">Password</label>
-            <div class="col-sm-10">
-            <input type="password" class="form-control" id="StdPass" name="StdPass" 
-            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}|:<>?])[a-zA-Z!@#$%^&*()_+{}|:<>?0-9]{8,}" 
-            title="Password must contain at least one uppercase letter, one lowercase letter, one symbol, and be at least 8 characters long" 
-            required>
-            </div>
-            </div>
+            <div class="mb-3 row">
+              <label type="text" class="form-label">Password</label>
+              <div class="col-sm-10">
+                  <input type="password" class="form-control" id="StdPass" name="StdPass" 
+                  pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W)[a-zA-Z\d\W]{8,}" 
+                  title="Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be at least 8 characters long" 
+                  required>
+              </div>
+          </div>
               
             <button type="submit" class="btn btn-primary text-center w-30 mx-auto" value="validate">Create</button>
             <p><a class="sec-color link-opacity-50-hover mx-auto"href="login.html">Already have an account?</a></p>
