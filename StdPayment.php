@@ -20,7 +20,7 @@ if ($result && mysqli_num_rows($result) > 0) {
 }
 
 if ($stdID) {
-  $parcelQuery = "SELECT ParcelTrackingNum FROM Parcel WHERE StdID = '$stdID' AND ParcelStatus = 'Ready for pickup'";
+  $parcelQuery = "SELECT ParcelTrackingNum FROM Parcel WHERE StdID = '$stdID'";
   $parcelResult = mysqli_query($connect, $parcelQuery);
   if ($parcelResult && mysqli_num_rows($parcelResult) > 0) {
     while ($row = mysqli_fetch_assoc($parcelResult)) {
