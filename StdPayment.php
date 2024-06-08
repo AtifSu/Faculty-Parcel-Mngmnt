@@ -1,10 +1,6 @@
 <?php
 include('php/connect.php');
 session_start();
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require __DIR__ . '/vendor/autoload.php'; // Adjust the path if needed
 
 $stdID = isset($_SESSION['StdID']) ? $_SESSION['StdID'] : null;
 $paymentDetails = [];
@@ -20,7 +16,7 @@ if ($result && mysqli_num_rows($result) > 0) {
 }
 
 if ($stdID) {
-  $parcelQuery = "SELECT ParcelTrackingNum FROM Parcel WHERE StdID = '$stdID'";
+  $parcelQuery = "SELECT ParcelTrackingNum FROM Parcel WHERE StdID = '$stdID' AND ParcelStatus = 'Ready for pickup'";
   $parcelResult = mysqli_query($connect, $parcelQuery);
   if ($parcelResult && mysqli_num_rows($parcelResult) > 0) {
     while ($row = mysqli_fetch_assoc($parcelResult)) {
@@ -30,70 +26,40 @@ if ($stdID) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['schedule_appointment'])) {
-    $appointmentDate = mysqli_real_escape_string($connect, $_POST['AppointmentDate']);
-    $appointmentTime = mysqli_real_escape_string($connect, $_POST['AppointmentTime']);
+  $appointmentDate = mysqli_real_escape_string($connect, $_POST['AppointmentDate']);
+  $appointmentTime = mysqli_real_escape_string($connect, $_POST['AppointmentTime']);
 
-    if (isset($_FILES['receipt_image']) && $_FILES['receipt_image']['error'] == 0) {
-        $targetDir = "payment/receipts/";
-        $targetFile = $targetDir . basename($_FILES["receipt_image"]["name"]);
-        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+  if (isset($_FILES['receipt_image']) && $_FILES['receipt_image']['error'] == 0) {
+    $targetDir = "payment/receipts/";
+    $targetFile = $targetDir . basename($_FILES["receipt_image"]["name"]);
+    $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-        $check = getimagesize($_FILES["receipt_image"]["tmp_name"]);
-        if ($check === false) {
-            $_SESSION['appointment_error'] = "File is not an image.";
-        } elseif ($_FILES["receipt_image"]["size"] > 500000) {
-            $_SESSION['appointment_error'] = "Sorry, your file is too large.";
-        } elseif (!in_array($imageFileType, ["jpg", "jpeg", "png", "gif"])) {
-            $_SESSION['appointment_error'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+    $check = getimagesize($_FILES["receipt_image"]["tmp_name"]);
+    if ($check === false) {
+      $_SESSION['appointment_error'] = "File is not an image.";
+    } elseif ($_FILES["receipt_image"]["size"] > 500000) {
+      $_SESSION['appointment_error'] = "Sorry, your file is too large.";
+    } elseif (!in_array($imageFileType, ["jpg", "jpeg", "png", "gif"])) {
+      $_SESSION['appointment_error'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+    } else {
+      if (move_uploaded_file($_FILES["receipt_image"]["tmp_name"], $targetFile)) {
+        $appointmentSql = "INSERT INTO Appointment (StdID, AppointmentDate, AppointmentTime, ParcelTrackingNum, PaymentReceipt) VALUES (?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($connect, $appointmentSql);
+        mysqli_stmt_bind_param($stmt, "sssss", $stdID, $appointmentDate, $appointmentTime, $parcels[0], $targetFile);
+
+        if (mysqli_stmt_execute($stmt)) {
+          $_SESSION['appointment_success'] = "Appointment scheduled successfully.";
         } else {
-            if (move_uploaded_file($_FILES["receipt_image"]["tmp_name"], $targetFile)) {
-                $appointmentSql = "INSERT INTO Appointment (StdID, AppointmentDate, AppointmentTime, ParcelTrackingNum, PaymentReceipt) VALUES (?, ?, ?, ?, ?)";
-                $stmt = mysqli_prepare($connect, $appointmentSql);
-                mysqli_stmt_bind_param($stmt, "sssss", $stdID, $appointmentDate, $appointmentTime, $parcels[0], $targetFile);
-
-                if (mysqli_stmt_execute($stmt)) {
-                    $_SESSION['appointment_success'] = "Appointment scheduled successfully.";
-
-                    // Send Email
-                    $mail = new PHPMailer(true);
-                    try {
-                        //Server settings
-                        $mail->isSMTP();
-                        $mail->Host       = 'smtp.example.com'; // Set the SMTP server to send through
-                        $mail->SMTPAuth   = true;
-                        $mail->Username   = 'your_email@example.com'; // SMTP username
-                        $mail->Password   = 'your_password'; // SMTP password
-                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                        $mail->Port       = 587;
-
-                        //Recipients
-                        $mail->setFrom('your_email@example.com', 'Parcel Management');
-                        $mail->addAddress('student_email@example.com'); // Add a recipient
-
-                        // Content
-                        $mail->isHTML(true);
-                        $mail->Subject = 'Appointment Scheduled';
-                        $mail->Body    = "<h1>Appointment Details</h1>
-                                          <p><strong>Date:</strong> $appointmentDate</p>
-                                          <p><strong>Time:</strong> $appointmentTime</p>
-                                          <p><strong>Parcel Tracking Number:</strong> {$parcels[0]}</p>
-                                          <p><strong>Payment Receipt:</strong> <a href='$targetFile'>View Receipt</a></p>";
-
-                        $mail->send();
-                    } catch (Exception $e) {
-                        $_SESSION['appointment_error'] = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-                    }
-                } else {
-                    $_SESSION['appointment_error'] = "Error inserting appointment: " . mysqli_error($connect);
-                }
-                mysqli_stmt_close($stmt);
-            } else {
-                $_SESSION['appointment_error'] = "Sorry, there was an error uploading your file.";
-            }
+          $_SESSION['appointment_error'] = "Error inserting appointment: " . mysqli_error($connect);
         }
+        mysqli_stmt_close($stmt);
+      } else {
+        $_SESSION['appointment_error'] = "Sorry, there was an error uploading your file.";
+      }
     }
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
+  }
+  header("Location: " . $_SERVER['PHP_SELF']);
+  exit();
 }
 
 mysqli_close($connect);
