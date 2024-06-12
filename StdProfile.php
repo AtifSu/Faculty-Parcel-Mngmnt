@@ -4,8 +4,8 @@ include('php/connect.php');
 
 if (!isset($_SESSION['StdID'])) {
 
-  header("Location: login.html");
-  exit(); 
+    header("Location: login.html");
+    exit();
 }
 
 $StdID = $_SESSION['StdID'];
@@ -13,14 +13,14 @@ $sql = "SELECT StdName, StdID, StdEmail, StdImg FROM Student WHERE StdID = '$Std
 $result = mysqli_query($connect, $sql);
 
 if ($result && mysqli_num_rows($result) > 0) {
-  $row = mysqli_fetch_assoc($result);
-  $StdName = $row['StdName'];
-  $StdID = $row['StdID'];
-  $StdEmail = $row['StdEmail'];
-  $StdImg = $row['StdImg'];
+    $row = mysqli_fetch_assoc($result);
+    $StdName = $row['StdName'];
+    $StdID = $row['StdID'];
+    $StdEmail = $row['StdEmail'];
+    $StdImg = $row['StdImg'];
 } else {
-  echo "<script>alert('Error: No results found');</script>";
-  exit();
+    echo "<script>alert('Error: No results found');</script>";
+    exit();
 }
 
 mysqli_close($connect);
@@ -90,14 +90,14 @@ mysqli_close($connect);
                 <p><strong>Name:</strong> <?php echo ($StdName); ?></p>
                 <p><strong>Matrics ID:</strong> <?php echo ($StdID); ?></p>
                 <p><strong>Email:</strong> <?php echo ($StdEmail); ?></p>
-                <form action="php/stdUpdate.php" method="POST">
+                <form action="php/StdUpdate.php" method="POST">
                     <p>
-                        <input type="password" class="form-control" id="passwordField" name="StdPass" placeholder="Enter new password">
+                        <input type="password" class="form-control" id="passwordField" name="StdPass" placeholder="Enter password">
                     </p>
                     <p>
-                        <input type="email" class="form-control" id="emailField" name="StdEmail" placeholder="Enter new email">
+                        <input type="email" class="form-control" id="emailField" name="NewStudentEmail" placeholder="Enter new email">
                     </p>
-                    <input type="hidden" name="StdID" value="<?php echo ($StdID); ?>">
+                    <input type="hidden" name="CurrentStudentEmail" value="<?php echo htmlspecialchars($StdEmail); ?>">
                     <br>
                     <input class="btn btn-primary" type="submit" name="submit" value="Update Profile">
                 </form>

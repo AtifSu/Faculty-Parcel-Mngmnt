@@ -5,7 +5,7 @@ include('php/connect.php');
 if (!isset($_SESSION['AdminID'])) {
 
   header("Location: login.html");
-  exit(); 
+  exit();
 }
 
 $AdminID = $_SESSION['AdminID'];
@@ -99,12 +99,12 @@ mysqli_close($connect);
         <p><strong>Email:</strong> <?php echo ($AdminEmail); ?></span></p>
         <form action="php/edit.php" method="POST">
           <p>
-            <input type="password" class="form-control" id="passwordField" name="AdminPass" placeholder="Enter new password">
+            <input type="password" class="form-control" id="passwordField" name="AdminPass" placeholder="Enter password">
           </p>
           <p>
-            <input type="email" class="form-control" id="emailField" name="AdminEmail" placeholder="Enter new email">
+            <input type="email" class="form-control" id="emailField" name="NewAdminEmail" placeholder="Enter new email">
           </p>
-          <input type="hidden" name="AdminEmail" value="<?php echo ($AdminEmail); ?>">
+          <input type="hidden" name="CurrentAdminEmail" value="<?php echo htmlspecialchars($AdminEmail); ?>">
           <br>
           <input class="btn btn-primary" type="submit" name="submit" value="Update Profile">
         </form>
@@ -161,7 +161,7 @@ mysqli_close($connect);
       var toasts = document.querySelectorAll('.toast');
       toasts.forEach(function(toast) {
         var bsToast = new bootstrap.Toast(toast);
-        //bsToast.show();
+        bsToast.show();
       });
     });
 
